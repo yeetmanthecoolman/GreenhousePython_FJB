@@ -168,10 +168,11 @@ def repeater():
 	print(current_time.time() > four_pm.time())
 	if current_time.time() > four_pm.time():
 		ss.light(light_length)
-	window.after(200, repeater)
+	window.after(200, repeater)#timedelta should not be hardcoded, also this will overflow the stack eventually.
 		
 window.after(200, repeater)
 window.mainloop()
+
 
 
 
