@@ -5,7 +5,7 @@ import time
 
 # solenoid opens when 12V applied at 0.3A
 
-dataIndex = open("/home/Gardener/GreenhousePython/images/dataIndex.txt", "r+")
+dataIndex = open("/home/Gardener/GreenhousePython/src/dataIndex.txt", "r+")
 DataA = cameraControl.getDataAttributes()
 print(cameraControl.getDataAttributes())
 
