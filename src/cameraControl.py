@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 from picamera2 import Picamera2, Preview
 import time
 import cv2
-import PIL as Image
+import pillow as Image
 
 # solenoid opens when 12V applied at 0.3A
 
