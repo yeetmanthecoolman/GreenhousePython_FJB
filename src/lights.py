@@ -1,3 +1,5 @@
+#Yes, I reverted the changes. This script needs to be able to operate for variable lengths of time, and the revised script didn't do that. Furthermore, I'd like to do some testing on this script, because, again, I think I fixed it in the development before the initial commit.
+#TLDR, beautiful solution to the wrong problem.
 import datetime
 from datetime import timedelta, timezone, tzinfo
 from suntime import Sun, SunTimeException

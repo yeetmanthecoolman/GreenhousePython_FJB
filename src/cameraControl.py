@@ -2,13 +2,13 @@ import RPi.GPIO as GPIO
 from picamera2 import Picamera2, Preview
 import time
 import cv2
-import PIL as Image
+import pillow as Image
 
 # solenoid opens when 12V applied at 0.3A
 
 #gives the camera attributes
 def getDataAttributes():
-    dataIndex = open("/home/Gardener/GreenhousePython/images/dataIndex.txt", "r")
+    dataIndex = open("/home/Gardener/GreenhousePython/src/dataIndex.txt", "r")#this should not be hard-coded.
     last_file_number = dataIndex.readline().split()[1]
     last_file_number = int(last_file_number)
     
@@ -22,7 +22,7 @@ def getDataAttributes():
 
 # sets attributes in dataindex.txt file
 def setAttributes(attributes):
-    dataIndex = open("/home/Gardener/GreenhousePython/images/dataIndex.txt", "w")
+    dataIndex = open("/home/Gardener/GreenhousePython/src/dataIndex.txt", "w")
     dataIndex.writelines(["last_file_number: " + str(attributes[0]), '\n',
                           "interval_in_seconds: " + str(attributes[1]), '\n',
                           "file_name_prefix: " + attributes[2]])
@@ -43,7 +43,7 @@ def cameraCapture(attributes):
 def lastFileName():
     attributes = getDataAttributes()
     if (attributes[0] == 0):
-        return "UMBER.jpg"
+        return "placeholder.jpg"
     return "/home/Gardener/GreenhousePython/images/" + attributes[2] + str(attributes[0]) + ".jpg"
 
 def create_video(image_paths, output_video_path, fps=24, size=None):
