@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-import mcp_testing as MCP
+import mcp as MCP
 
 
 GPIO.setmode(GPIO.BCM)
