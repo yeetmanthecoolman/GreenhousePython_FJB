@@ -22,5 +22,5 @@ repository = "https://github.com/sp29174/GreenhousePython"
 documentation = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
 [tool.poetry]
-package-mode = false
+package-mode = true
 packages = [ { include = "*" } ]
