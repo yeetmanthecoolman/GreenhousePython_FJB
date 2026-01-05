@@ -156,7 +156,7 @@ def new_light_control():
 #break things into 20% intervals from 0 to 50k based on the values returned from the MCP
 def water(percent):
 	if(percent == 0):
-		GPIO.output(16, GPIO.LOW)
+		GPIO.output(waterPin, GPIO.LOW)
 		print("low")
 		return
 	moisture = 0
@@ -164,10 +164,10 @@ def water(percent):
 		moisture += MCP.get_data(x)
 	moisture = moisture / 3
 	if(MAX_VALUE / (100 / percent) > moisture):
-		GPIO.output(16, GPIO.HIGH)
+		GPIO.output(waterPin, GPIO.HIGH)
 		print("high")
 	else:
-		GPIO.output(16, GPIO.LOW)
+		GPIO.output(waterPin, GPIO.LOW)
 		print("low")
 
 def image_update():
@@ -215,12 +215,13 @@ def light(light_length,latitude,longitude):
     light_on = True
   else:
     light_on = False
-  GPIO.output(21, True)
+  GPIO.output(lightPin, light_on)
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
