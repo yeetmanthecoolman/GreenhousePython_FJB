@@ -39,20 +39,20 @@ This launches the GUI, integrating all modules.
 
 ```
 primaryPython/
-
-├── src/              # Central GUI hub
-
-	└── main.py
-	
-├── lights.py            # Grow light scheduling
-
-├── mcp.py               # Moisture sensor data
-
-├── water_control.py     # Pump relay control (may need fixes)
-
-├── cameraControl.py     # Photo capture
-
-└── timelapse_images/    # Stored photos for video rendering
+├── .github/workflows    # Development workflows
+	└── codeq.yml        # Code quality workflow
+├── docs/                # Documentation that no one reads
+	└── basic_usage.md   # Basic usage instructions
+├── images/              # The Photographs, initially empty because you haven't taken any
+	└── placeholder.jpg  # Placeholder so nothing breaks
+├── src/                 # Source code folder
+    ├── dataIndex.txt    # Persistent data storage file
+	└── main.py          # Centralized script file
+├── .gitignore           # File for git that you can ignore
+├── README.md            # This exact file
+├── SECURITY.md          # Infomation on security updates and reporting
+├── comments.txt         # Frank J. Barth's sarcastic comments
+└── pyproject.toml       # Internal dependency list
 ```
 
 🎯 Your Contribution Tasks
@@ -66,16 +66,11 @@ primaryPython/
 
 	💡Enhancements: Add config files, web dashboard, or cloud upload (bonus!).
 
-	💡Pro Tip: Test modules individually first (python water_control.py), then integrate via main.py.
-
 🔧 Troubleshooting & Notes
-	💡Virtual Env Issues: Always activate before running code.
-
-	💡Relay Limitation: Build watering OR lights – document your choice.
 
 	💡Dependencies: Ensure GPIO, camera libs, and Pillow/OpenCV are installed in the venv.
 
-	💡Hardware: Raspberry Pi with moisture sensor, relay, pump/light, and camera module.
+	💡Hardware: Raspberry Pi with moisture sensor, relay, pump, light, and camera module.
 
 📞 Need Help?
 Contact:
@@ -84,7 +79,9 @@ Contact:
 	
 	💡sp29174@students.mcpasd.k12.wi.us
 
+	💡frank.barth@outlook.com
+
 🤝 Contributing
 Fork the repo, create a branch, and submit a PR! Start with "good first issues" like timelapse scripting. Let's grow this project together 🌱
 
-License: MIT (feel free to adapt for your greenhouse or classroom!)
+License: MIT
