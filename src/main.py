@@ -310,16 +310,3 @@ GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
-
