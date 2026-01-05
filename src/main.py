@@ -15,51 +15,12 @@ import lights as ss#should be fixed
 import water_control as water
 import mcp as MCP
 
-# Setup variables and GPIO
+# Setup variables and GPIO ****************************************************************************************
 norm_font = 'Calibri 18'
 recording_status = "Start Recording"
 light_length = 16
-
-
-
-# methods   ***********************************************************************************
-
-def testing():
-	print(light_length)
 	
-# new_light_control
-# 
-# Get user input and store it
-# Clear the input
-# Set light_length to the stored input value
-
-def new_light_control():
-	global light_length
-	new_light_length = light_cycle.get()
-	light_cycle.delete(0, len(new_light_length))
-	if(new_light_length != ""):
-		try:
-			if(int(new_light_length) <= 24):
-				light_length = int(new_light_length)
-			else:
-				light_length = 24
-			print(light_length)
-			light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + str(light_length) + " hours per day.")
-		except ValueError as e:
-			print("Invalid value entered. Please enter a valid value.")
-			print("length is still " + str(light_length))
-
-
-
-def image_update():
-    cc.cameraCapture(attributes)
-    img = ImageTk.PhotoImage(Image.open(cc.lastFileName()))
-    #image2 = image.resize((640, 480))
-    image_label.configure(image=img) 
-    image_label.image = img
-	
-	
-#****************************************************************************************	
+# GUI ****************************************************************************************	
 
 #get attributes
 attributes = cc.getDataAttributes()
@@ -159,6 +120,44 @@ light_cycle.pack(padx = 25, pady = 5)
 enter_button.pack(padx = 25, pady = 5)
 layer2_frame.pack(padx = 5, pady = 5)
 
+# methods   ***********************************************************************************
+
+def testing():
+	print(light_length)
+	
+# new_light_control
+# 
+# Get user input and store it
+# Clear the input
+# Set light_length to the stored input value
+
+def new_light_control():
+	global light_length
+	global light_cycle
+	new_light_length = light_cycle.get()
+	light_cycle.delete(0, len(new_light_length))
+	if(new_light_length != ""):
+		try:
+			if(int(new_light_length) <= 24):
+				light_length = int(new_light_length)
+			else:
+				light_length = 24
+			print(light_length)
+			light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + str(light_length) + " hours per day.")
+		except ValueError as e:
+			print("Invalid value entered. Please enter a valid value.")
+			print("length is still " + str(light_length))
+
+
+
+def image_update():
+	global image_label
+    cc.cameraCapture(attributes)
+    img = ImageTk.PhotoImage(Image.open(cc.lastFileName()))
+    #image2 = image.resize((640, 480))
+    image_label.configure(image=img) 
+    image_label.image = img
+	
 # TODO: Fix
 def repeater():
 	current_time = datetime.datetime.now(timezone.utc) - timedelta(hours=5)#add variable timezone, this is stuck on UTC-5
@@ -172,6 +171,7 @@ def repeater():
 		
 window.after(200, repeater)
 window.mainloop()
+
 
 
 
