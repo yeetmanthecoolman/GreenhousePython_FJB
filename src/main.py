@@ -25,9 +25,8 @@ resolution = '1920x1080'
 latitude = 43.0972
 longitude = 89.5043
 dt = 200
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(16, GPIO.OUT)
-GPIO.setup(21, GPIO.OUT)
+lightPin = 21
+waterPin = 16
 MAX_VALUE = 50000
 	
 # GUI ****************************************************************************************	
@@ -217,8 +216,11 @@ def light(light_length,latitude,longitude):
   else:
     light_on = False
   GPIO.output(21, True)
-	
-GPIO.cleanup()
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(waterPin, GPIO.OUT)
+GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
