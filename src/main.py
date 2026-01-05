@@ -195,13 +195,9 @@ def repeater(dt,latitude,longitude):
 	window.after(dt, lambda : repeater(dt,latitude,longitude))
 
 def light(light_length,latitude,longitude):
-
   mcpasd = datetime.datetime.now(timezone.utc) - timedelta(hours=5)
-
   sun = Sun(latitude, longitude)
-
   light_on = False
-
   # Get today's sunrise and sunset in CST
   today_sr = sun.get_sunrise_time() + timedelta(hours=7)
   today_ss = sun.get_sunset_time() + timedelta(hours=7)
@@ -209,13 +205,9 @@ def light(light_length,latitude,longitude):
     today_sr = today_sr - timedelta(days=1)
   if today_sr > today_ss:
     today_ss = today_ss + timedelta(days=1)
-    
   today_suntime = today_ss - today_sr
-
   light_on = today_suntime - today_suntime + timedelta(hours = light_length)
-
   today_suntime = mcpasd - today_sr
-
   if(mcpasd.time() > today_ss.time() and today_suntime < light_on):
     light_on = True
   else:
@@ -226,21 +218,16 @@ def getDataAttributes():
     dataIndex = open("./dataIndex.txt", "r")
     last_file_number = dataIndex.readline().split()[1]
     last_file_number = int(last_file_number)
-    
     interval_in_seconds = dataIndex.readline().split()[1]
     interval_in_seconds = int(interval_in_seconds)
-    
     prefix = dataIndex.readline().split()[1]
-    
     dataIndex.close()
     return [last_file_number, interval_in_seconds, prefix]
 
 # sets attributes in dataindex.txt file
 def setAttributes(attributes):
     dataIndex = open("./dataIndex.txt", "w")
-    dataIndex.writelines(["last_file_number: " + str(attributes[0]), '\n',
-                          "interval_in_seconds: " + str(attributes[1]), '\n',
-                          "file_name_prefix: " + attributes[2]])
+    dataIndex.writelines(["last_file_number: " + str(attributes[0]), '\n', "interval_in_seconds: " + str(attributes[1]), '\n', "file_name_prefix: " + attributes[2]])
     dataIndex.close()
 
 #input camera attributes and capture image, updates attributes and returns new attributes
@@ -269,14 +256,11 @@ def create_video(image_paths, output_video_path, fps=24, size=None):
     first_frame = cv2.imread(image_paths[0])
     if first_frame is None:
         raise ValueError("Cannot read image at path")
-    
     if size is None:
         height, width, _ = first_frame.shape
         size = (width, height)
-    
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(output_video_path, fourcc, fps, size)
-    
     for path in image_paths:
         frame = cv2.imread(path)
         if frame is None:
@@ -284,7 +268,6 @@ def create_video(image_paths, output_video_path, fps=24, size=None):
             continue
         frame_resized = cv2.resize(frame, size)
         out.write(frame_resized)
-        
     out.release()
     print(f"Vido saved to {output_video_path}")
 
@@ -327,6 +310,7 @@ GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
