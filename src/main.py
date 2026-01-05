@@ -110,7 +110,7 @@ layer2_frame = ttk.Frame(master = window)
 # captures picture, command= cameraCapture
 # ISSUE: taking picture on boot
 #I disagree, that's a feature!
-manual_pic_button = ttk.Button(master = layer2_frame, text = "Take Manual\nPicture", command = image_update)
+manual_pic_button = ttk.Button(master = layer2_frame, text = "Take Manual\nPicture", command = lambda : image_update(image_label,attributes))
 
 # should start recording function
 start_record = ttk.Button(master = layer2_frame, text = recording_status)
@@ -171,11 +171,9 @@ def water(percent):
 		GPIO.output(16, GPIO.LOW)
 		print("low")
 
-def image_update():
-	global image_label
+def image_update(image_label,attributes):
     cc.cameraCapture(attributes)
     img = ImageTk.PhotoImage(Image.open(cc.lastFileName()))
-    #image2 = image.resize((640, 480))
     image_label.configure(image=img) 
     image_label.image = img
 	
@@ -196,6 +194,7 @@ def repeater():
 GPIO.cleanup()
 window.after(timedelta, repeater)
 window.mainloop()
+
 
 
 
