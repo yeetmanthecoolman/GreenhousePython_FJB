@@ -20,7 +20,6 @@ norm_font = 'Calibri 18'
 recording_status = "Start Recording"
 light_length = 16
 attrs = getDataAttributes()
-time = 0
 header_font = 'Calibri 50 bold'
 resolution = '1920x1080'
 latitude = 43.0972
@@ -288,6 +287,7 @@ GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
