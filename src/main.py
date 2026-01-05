@@ -13,6 +13,9 @@ import datetime
 from datetime import timedelta, timezone, tzinfo
 from suntime import Sun, SunTimeException
 import time
+import busio
+import digitalio
+import board
 import mcp as MCP
 
 # Setup variables and GPIO ****************************************************************************************
@@ -287,6 +290,7 @@ GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
