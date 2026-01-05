@@ -37,6 +37,7 @@ This launches the GUI, integrating all modules.
 
 📁 File Structure:
 
+```
 primaryPython/
 
 ├── src/              # Central GUI hub
@@ -52,6 +53,7 @@ primaryPython/
 ├── cameraControl.py     # Photo capture
 
 └── timelapse_images/    # Stored photos for video rendering
+```
 
 🎯 Your Contribution Tasks
 	💡Help polish this into a production-ready system! Focus areas:
