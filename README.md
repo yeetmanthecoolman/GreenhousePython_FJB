@@ -34,15 +34,23 @@ This project integrates sensors, relays, a GUI, and camera control to create a f
 			sudo echo "hello world"
 		If this does not work, then you need to take this up with your administrator, because although we won't stop you from circumventing this, they certainly will.
 
-	⏰The scary part: We haven't tested this stuff very thuroughly yet, and so ***IF THIS BREAKS YOUR SYSTEM, DON'T BE SURPRISED.*** With that out of the way:
-	
-	💡Activate virtual environment:
-		source vir/bin/activate
-			
-	💡Run the system:
-		💡python main.py
+	⏰The scary part: We haven't tested this stuff very thuroughly yet, and so 
+	***IF THIS BREAKS YOUR SYSTEM, DON'T BE SURPRISED.*** 
+	With that out of the way:
 
-This launches the GUI, integrating all modules.
+	💡Release upgrade: We only support Ubuntu Server 25.10 officially. Therefore, BEING VERY CLEAR THAT THIS IS PLAYING WITH FIRE, you can run this to get there:
+		sudo do-release-upgrade -d
+	
+	💡In order to build this software, you will need some dependencies. In order to get them, you can run this command. THIS WILL RESTART YOUR COMPUTER.
+		cd ~/ && sudo apt install --install-recommends g++ libkms++-dev pkgconf ffmpeg libopenjp2-7 libcamera-dev libfmt-dev libdrm-dev git pipx gcc gcc-aarch64-linux-gnu libcap-dev python3-dev python3-tk && git clone https://github.com/sp29174/GreenhousePython.git && pipx ensurepath && reboot
+
+	💡In order to run this software, you will need other, different dependencies. In order to get them, you can run this command. It will start the script, and you should be able to control the greenhouse.
+		cd ~/ && pipx install -vvv poetry && cd ./GreenhousePython && poetry install -vvv --all-groups --all-extras --compile && poetry run -vvv python -vvi ./src/main.py 
+	
+	💡When you want to run the script again, you can run:
+		cd ~/ && sudo apt full-upgrade && cd ./GreenhousePython && poetry update -vvv && poetry run -vvv python -vvi ./src/main.py
+			
+	💡To uninstall the greenhouse project, we will need to make an uninstall command. We have not gotten it working yet.
 
 📁 File Structure:
 
