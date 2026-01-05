@@ -19,7 +19,7 @@ import mcp as MCP
 norm_font = 'Calibri 18'
 recording_status = "Start Recording"
 light_length = 16
-attributes = getDataAttributes()
+attrs = getDataAttributes()
 time = 0
 header_font = 'Calibri 50 bold'
 resolution = '1920x1080'
@@ -173,8 +173,8 @@ def water(percent):
 
 def image_update():
 	global image_label
-	global attributes
-    cameraCapture(attributes)
+	global attrs
+    cameraCapture(attrs)
     img = ImageTk.PhotoImage(Image.open(lastFileName()))
     image_label.configure(image=img) 
     image_label.image = img
@@ -289,6 +289,7 @@ GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
