@@ -206,9 +206,9 @@ def light(light_length,latitude,longitude):
   if today_sr > today_ss:
     today_ss = today_ss + timedelta(days=1)
   today_suntime = today_ss - today_sr
-  light_on = today_suntime - today_suntime + timedelta(hours = light_length)
+  light_on_time = today_suntime - today_suntime + timedelta(hours = light_length)
   today_suntime = mcpasd - today_sr
-  if(mcpasd.time() > today_ss.time() and today_suntime < light_on):
+  if(mcpasd.time() > today_ss.time() and today_suntime < light_on_time):
     light_on = True
   else:
     light_on = False
@@ -310,3 +310,4 @@ GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
