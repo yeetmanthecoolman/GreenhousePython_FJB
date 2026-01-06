@@ -274,7 +274,6 @@ def see_data():
 	print('Chan 1 ADC Voltage: ' + str(chan1.voltage) + 'V')
 	print('Chan 2 Raw ADC Value: ', chan2.value)
 	print('Chan 2 ADC Voltage: ' + str(chan2.voltage) + 'V')
-	time.sleep(2)
 
 def get_data(num):
 	num = int(num)
@@ -307,6 +306,7 @@ GPIO.setup(lightPin, GPIO.OUT)
 see_data()
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
