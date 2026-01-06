@@ -1,6 +1,6 @@
-                                                     Greenhouse Automation Project
+                                                     Terrestrial Vitrification Project
                                                                                                                                                 
-Welcome to the Greenhouse Automation System – a smart, Raspberry Pi-powered solution that automates plant care with automated watering (or grow lights), real-time moisture monitoring, and stunning timelapse videos. Perfect for hobbyists, educators, or IoT enthusiasts building sustainable green spaces!
+Welcome to the Terrestrial Vitrification Project – a smart, Raspberry Pi-powered solution that automates plant care with automated watering and grow lights, real-time moisture monitoring, and (allegedly) stunning timelapse videos. Better yet, it's open-source! Perfect for hobbyists, educators, or IoT enthusiasts building sustainable green spaces!
 
 🚀 Project Overview
 
@@ -12,43 +12,65 @@ This project integrates sensors, relays, a GUI, and camera control to create a f
 		
 	💡Captures hourly timelapse photos and compiles them into videos.
 		
-	💡Built with Python for easy customization and expansion.
+	💡Built with Python for easy customization.
 		
 🗝️ Key Features:
 		
 	💡User-friendly GUI (main.py) for control and status.
 		
-	💡Modular components: lighting (lights.py), moisture reading (mcp.py), watering relay (water_control.py), and camera (cameraControl.py).
+	💡Wide-open source: You can make this project better! Think of the possibilities.
 		
-	💡Single-relay design: Prioritize watering or lights (not both).
+	💡Remote design: Tired of having to touch grass to monitor the greenhouse? Now you don't have to!
 
 🛠️ Quick Start
 
-	💡Navigate to project directory:
-			cd /home/Gardener/GreenhousePython/primaryPython
-			
-	💡Activate virtual environment:
-		source vir/bin/activate
-			
-	💡Run the system:
-		💡python main.py
+	😵‍💫Check: are you on the right system? 
 
-This launches the GUI, integrating all modules.
+		If you are on anything other than a Raspberry Pi running Ubuntu Server, you are on an unsupported platform. While this project may expand to cover you in the future, it doesn't right now. On the other hand, we certainly aren't going to try to stop you from ignoring this paragraph and building this anyway; just don't expect a warantee or whatever. 
+
+	😵‍💫Check: are you a superuser?
+
+		💡Open a terminal and type: 
+			sudo echo "hello world"
+		If this does not work, then you need to take this up with your administrator, because although we won't stop you from circumventing this, they certainly will.
+
+	⏰The scary part: We haven't tested this stuff very thuroughly yet, and so 
+	***IF THIS BREAKS YOUR SYSTEM, DON'T BE SURPRISED.*** 
+	With that out of the way:
+
+	💡Release upgrade: We only support Ubuntu Server 25.10 officially. Therefore, BEING VERY CLEAR THAT THIS IS PLAYING WITH FIRE, you can run this to get there:
+		sudo do-release-upgrade -d
+	
+	💡In order to build this software, you will need some dependencies. In order to get them, you can run this command. THIS WILL RESTART YOUR COMPUTER.
+		cd ~/ && sudo apt install --install-recommends g++ libkms++-dev pkgconf ffmpeg libopenjp2-7 libcamera-dev libfmt-dev libdrm-dev git pipx gcc gcc-aarch64-linux-gnu libcap-dev python3-dev python3-tk && git clone https://github.com/sp29174/GreenhousePython.git && pipx ensurepath && reboot
+
+	💡In order to run this software, you will need other, different dependencies. In order to get them, you can run this command. It will start the script, and you should be able to control the greenhouse.
+		cd ~/ && pipx install -vvv poetry && cd ./GreenhousePython && poetry install -vvv --all-groups --all-extras --compile && poetry run -vvv python -vvi ./src/main.py 
+	
+	💡When you want to run the script again, you can run:
+		cd ~/ && sudo apt full-upgrade && cd ./GreenhousePython && poetry update -vvv && poetry run -vvv python -vvi ./src/main.py
+			
+	💡To uninstall the greenhouse project, we will need to make an uninstall command. We have not gotten it working yet.
 
 📁 File Structure:
 
+```
 primaryPython/
-├── main.py              # Central GUI hub
-
-├── lights.py            # Grow light scheduling
-
-├── mcp.py               # Moisture sensor data
-
-├── water_control.py     # Pump relay control (may need fixes)
-
-├── cameraControl.py     # Photo capture
-
-└── timelapse_images/    # Stored photos for video rendering
+├── .github/workflows    # Development workflows
+	└── codeq.yml        # Code quality workflow
+├── docs/                # Documentation that no one reads
+	└── basic_usage.md   # Basic usage instructions
+├── images/              # The Photographs, initially empty because you haven't taken any
+	└── placeholder.jpg  # Placeholder so nothing breaks
+├── src/                 # Source code folder
+    ├── dataIndex.txt    # Persistent data storage file
+	└── main.py          # Centralized script file
+├── .gitignore           # File for git that you can ignore
+├── README.md            # This exact file
+├── SECURITY.md          # Infomation on security updates and reporting
+├── comments.txt         # Frank J. Barth's sarcastic comments
+└── pyproject.toml       # Internal dependency list
+```
 
 🎯 Your Contribution Tasks
 	💡Help polish this into a production-ready system! Focus areas:
@@ -61,16 +83,11 @@ primaryPython/
 
 	💡Enhancements: Add config files, web dashboard, or cloud upload (bonus!).
 
-	💡Pro Tip: Test modules individually first (python water_control.py), then integrate via main.py.
-
 🔧 Troubleshooting & Notes
-	💡Virtual Env Issues: Always activate before running code.
-
-	💡Relay Limitation: Build watering OR lights – document your choice.
 
 	💡Dependencies: Ensure GPIO, camera libs, and Pillow/OpenCV are installed in the venv.
 
-	💡Hardware: Raspberry Pi with moisture sensor, relay, pump/light, and camera module.
+	💡Hardware: Raspberry Pi with moisture sensor, relay, pump, light, and camera module.
 
 📞 Need Help?
 Contact:
@@ -79,7 +96,9 @@ Contact:
 	
 	💡sp29174@students.mcpasd.k12.wi.us
 
+	💡frank.barth@outlook.com
+
 🤝 Contributing
 Fork the repo, create a branch, and submit a PR! Start with "good first issues" like timelapse scripting. Let's grow this project together 🌱
 
-License: MIT (feel free to adapt for your greenhouse or classroom!)
+License: MIT
