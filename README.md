@@ -6,9 +6,9 @@ Welcome to the Terrestrial Vitrification Project – a smart, Raspberry Pi-power
 
 This project integrates sensors, relays, a GUI, and camera control to create a fully autonomous greenhouse:
 		
-	💡Monitors soil moisture via MCP sensor.
+	💡Monitors soil moisture via sensors.
 		
-	💡Automates watering (or grow lights) based on schedules and data.
+	💡Automates watering and grow lights based on schedules and data.
 		
 	💡Captures hourly timelapse photos and compiles them into videos.
 		
@@ -72,22 +72,9 @@ primaryPython/
 └── pyproject.toml       # Internal dependency list
 ```
 
-🎯 Your Contribution Tasks
-	💡Help polish this into a production-ready system! Focus areas:
-
-	💡Timelapse Automation: Schedule cameraControl.py to run hourly.
-
-	💡Video Rendering: Compile images into MP4 videos (use OpenCV or FFmpeg).
-
-	💡Full Integration: Ensure main.py orchestrates everything seamlessly – handle relay conflicts and error logging.
-
-	💡Enhancements: Add config files, web dashboard, or cloud upload (bonus!).
-
 🔧 Troubleshooting & Notes
 
-	💡Dependencies: Ensure GPIO, camera libs, and Pillow/OpenCV are installed in the venv.
-
-	💡Hardware: Raspberry Pi with moisture sensor, relay, pump, light, and camera module.
+	💡Docs: Our glorious docs exist! Read all about the inner workings of this proghramme in the docs folder. 
 
 📞 Need Help?
 Contact:
