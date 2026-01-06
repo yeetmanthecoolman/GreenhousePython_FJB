@@ -174,7 +174,7 @@ def water(percent):
 		print("low")
 		
 def image_update(attrs):
-	global image_label
+    global image_label
     cameraCapture(attrs)
     img = ImageTk.PhotoImage(Image.open(lastFileName()))
     image_label.configure(image=img) 
@@ -307,6 +307,7 @@ GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
