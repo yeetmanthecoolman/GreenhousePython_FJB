@@ -30,7 +30,7 @@ longitude = -89.5043
 dt = 200
 lightPin = 21
 waterPin = 16
-MAX_VALUE = 50000
+MAX_VALUE = 65535
 	
 # GUI ****************************************************************************************	
 
@@ -307,6 +307,7 @@ GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
