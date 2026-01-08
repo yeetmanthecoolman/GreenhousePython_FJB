@@ -78,11 +78,11 @@ moisture_label = ttk.Label(master = moisture_frame, text = "Select Moisture Leve
 top_buttons = ttk.Frame(master = moisture_frame)
 bottom_buttons = ttk.Frame(master = moisture_frame)
 bmoisture0 = ttk.Button(master = top_buttons, text = "0%", command = lambda : water(0))#these should not be hardcoded
-bmoisture1 = ttk.Button(master = top_buttons, text = "20%", command = lambda : water(20))
-bmoisture2 = ttk.Button(master = top_buttons, text = "40%", command = lambda : water(40))
-bmoisture3 = ttk.Button(master = bottom_buttons, text = "60%", command = lambda : water(60))
-bmoisture4 = ttk.Button(master = bottom_buttons, text = "80%", command = lambda : water(80))
-bmoisture5 = ttk.Button(master = bottom_buttons, text = "100%", command = lambda : water(100))
+bmoisture1 = ttk.Button(master = top_buttons, text = "20%", command = lambda : water(0.2))
+bmoisture2 = ttk.Button(master = top_buttons, text = "40%", command = lambda : water(0.4))
+bmoisture3 = ttk.Button(master = bottom_buttons, text = "60%", command = lambda : water(0.6))
+bmoisture4 = ttk.Button(master = bottom_buttons, text = "80%", command = lambda : water(0.8))
+bmoisture5 = ttk.Button(master = bottom_buttons, text = "100%", command = lambda : water(1))
 
 # far right packing
 last_capture.pack(padx = 10, pady = 20)
@@ -112,7 +112,7 @@ layer2_frame = ttk.Frame(master = window)
 # captures picture, command= cameraCapture
 # ISSUE: taking picture on boot
 #I disagree, that's a feature!
-manual_pic_button = ttk.Button(master = layer2_frame, text = "Take Manual\nPicture", command = lambda : image_update(attrs))
+manual_pic_button = ttk.Button(master = layer2_frame, text = "Take Manual\nPicture", command = lambda : image_update(attrs,theCamera))
 
 # should start recording function
 start_record = ttk.Button(master = layer2_frame, text = recording_status)
@@ -157,25 +157,22 @@ def new_light_control():
 			print("length is still " + str(light_length))
 
 #break things into 20% intervals from 0 to 50k based on the values returned from the MCP
-def water(percent):
-	if(percent == 0):
-		GPIO.output(waterPin, GPIO.LOW)
-		print("low")
-		return
+def water(control_parameter):
+	global MAX_VALUE
 	moisture = 0
-	for x in range(3):
+	for x in range(3):#this logic must be fixed, it does not comply w/ the design reqs
 		moisture += get_data(x)
 	moisture = moisture / 3
-	if(MAX_VALUE / (100 / percent) > moisture):
+	if(MAX_VALUE * control_parameter > moisture):
 		GPIO.output(waterPin, GPIO.HIGH)
 		print("high")
 	else:
 		GPIO.output(waterPin, GPIO.LOW)
 		print("low")
 		
-def image_update(attrs):
+def image_update(attrs,camera):
     global image_label
-    cameraCapture(attrs)
+    cameraCapture(attrs,camera)
     img = ImageTk.PhotoImage(Image.open(lastFileName()))
     image_label.configure(image=img) 
     image_label.image = img
@@ -227,15 +224,11 @@ def setAttributes(attributes):
     dataIndex.close()
 
 #input camera attributes and capture image, updates attributes and returns new attributes
-def cameraCapture(attributes):
-    picam2 = Picamera2()
-    camera_config = picam2.create_still_configuration()
-    picam2.start()
+def cameraCapture(attributes,camera):
     name = "../images/" + attributes[2] + (str(attributes[0] + 1)) + ".jpg"
-    picam2.capture_file(name)
+    camera.capture_file(name)
     attributes[0] += 1
     setAttributes(attributes)
-    picam2.close()
     return attributes
 
 def lastFileName():
@@ -281,7 +274,7 @@ def get_data(num):
 
 def compare(num):
 	for x in chan_list:
-		if(num*100 / x > 120 or num*100 / x < 80):
+		if(num > 1.2 * x or num < 0.8 * x):
 			return False
 	return True
 
@@ -304,8 +297,14 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 see_data()
+theCamera = Picamera2()
+camera_cfg = picam2.create_still_configuration()
+theCamera.start()
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
+
+
 
 
 
