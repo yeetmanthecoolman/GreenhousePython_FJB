@@ -10,7 +10,7 @@ import tkinter as tk
 from tkinter import ttk
 import datetime
 from datetime import timedelta, timezone
-from suntime import Sun, SunTimeException
+from suntime import Sun
 import time
 import busio
 import digitalio
@@ -301,6 +301,7 @@ camera_cfg = picam2.create_still_configuration()
 theCamera.start()
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
