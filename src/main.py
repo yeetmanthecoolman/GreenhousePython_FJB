@@ -2,10 +2,9 @@
 # 
 # The main file.
 
-from picamera2 import Picamera2, Preview
+from picamera2 import Picamera2
 import cv2
 import RPi.GPIO as GPIO
-import PIL
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import ttk
@@ -302,6 +301,7 @@ camera_cfg = picam2.create_still_configuration()
 theCamera.start()
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
