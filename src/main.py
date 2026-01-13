@@ -2,17 +2,15 @@
 # 
 # The main file.
 
-from picamera2 import Picamera2, Preview
+from picamera2 import Picamera2
 import cv2
 import RPi.GPIO as GPIO
-import PIL
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import ttk
 import datetime
-from datetime import timedelta, timezone, tzinfo
-from suntime import Sun, SunTimeException
-import time
+from datetime import timedelta, timezone
+from suntime import Sun
 import busio
 import digitalio
 import board
@@ -48,7 +46,7 @@ layer1_frame = ttk.Frame(master = window)
 
 # image information
 image_frame = ttk.Frame(master = layer1_frame)
-image = Image.open("../images/placeholder.jpg")#this should not be hardcoded
+image = Image.open(lastFileName())
 image2 = image.resize((640, 480))
 last_plant_image = ImageTk.PhotoImage(image2)
 image_label = ttk.Label(master = image_frame, image = last_plant_image)
@@ -185,12 +183,11 @@ def repeater(dt,latitude,longitude):
 	print(four_pm.time())
 	print(current_time.time() > four_pm.time())
 	if current_time.time() > four_pm.time():
-		light(light_length,latitude,longitude)
+		light(light_length,latitude,longitude,theSun)
 	window.after(dt, lambda : repeater(dt,latitude,longitude))
 
-def light(light_length,latitude,longitude):
+def light(light_length,latitude,longitude,sun):
   mcpasd = datetime.datetime.now(timezone.utc) - timedelta(hours=5)
-  sun = Sun(latitude, longitude)
   # Get today's sunrise and sunset in CST
   today_sr = sun.get_sunrise_time() + timedelta(hours=7)
   today_ss = sun.get_sunset_time() + timedelta(hours=7)
@@ -234,7 +231,7 @@ def cameraCapture(attributes,camera):
 def lastFileName():
     attributes = getDataAttributes()
     if (attributes[0] == 0):
-        return "placeholder.jpg"
+        return "../images/placeholder.jpg"
     return "../images/" + attributes[2] + str(attributes[0]) + ".jpg"
 
 def create_video(image_paths, output_video_path, fps=24, size=None):
@@ -297,11 +294,18 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
 see_data()
+theSun = Sun(latitude, longitude)
 theCamera = Picamera2()
 camera_cfg = picam2.create_still_configuration()
 theCamera.start()
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
+
+
+
+
+
 
 
 
