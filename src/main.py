@@ -226,6 +226,8 @@ def setAttributes(attributes):
 
 #input camera attributes and capture image, updates attributes and returns new attributes
 def cameraCapture(attributes,camera):
+	if not camera_nonsense:
+		return attributes
     name = "../images/" + attributes[2] + (str(attributes[0] + 1)) + ".jpg"
     camera.capture_file(name)
     attributes[0] += 1
@@ -239,6 +241,8 @@ def lastFileName():
     return "../images/" + attributes[2] + str(attributes[0]) + ".jpg"
 
 def create_video(image_paths, output_video_path, fps=24, size=None):
+	if not camera_nonsense:
+		break
     if not image_paths:
         raise ValueError("The list of image paths is empty")
     print(":IORHGUIGHUBHSULIGH")
@@ -304,6 +308,7 @@ camera_cfg = picam2.create_still_configuration()
 theCamera.start()
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
 
 
 
