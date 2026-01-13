@@ -1,11 +1,15 @@
 class cv2:
   def imread(path):
-    pass
+    return None
   def VideoWriter_fourcc(*args):
-    pass
+    return None
   def VideoWriter(output_video_path,fourcc,fps,size):
-    pass
-  def resize(frame,size)
+    return None
+  def resize(frame,size):
+    return None
 
-def Picamera2():
-  return None
+class Picamera2:
+  def __init__():
+    pass
+  def start():
+    pass
