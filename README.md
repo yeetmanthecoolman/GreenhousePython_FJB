@@ -77,7 +77,8 @@ GreenhousePython/
 ├── README.md             # This exact file
 ├── SECURITY.md           # Information on security updates and reporting
 ├── comments.txt          # Frank J. Barth's sarcastic comments
-└── pyproject.toml        # Internal dependency list
+├── poetry.lock           # The lockfile
+└── pyproject.toml        # Internal dependency & configuration file
 ```
 
 🔧 Troubleshooting & Notes
