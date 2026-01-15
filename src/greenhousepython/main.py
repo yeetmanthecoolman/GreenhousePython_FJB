@@ -311,7 +311,7 @@ class GUI:
 		self.light_cycle.pack(padx = 25, pady = 5)
 		self.enter_button.pack(padx = 25, pady = 5)
 		self.layer2_frame.pack(padx = 5, pady = 5)
-		self.window.after(dt, lambda : repeater(dt,latitude,longitude))
+		self.window.after(dt, lambda : repeater(dt,latitude,longitude,"GUI",this))
 		self.window.mainloop()
 
 class CLI:
@@ -331,4 +331,5 @@ if type == "GUI":
 	gui = GUI(resolution,header_font,norm_font,recording_status)
 else:
 	assert True==False#Not implemented
+
 
