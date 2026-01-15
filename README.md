@@ -64,7 +64,7 @@ GreenhousePython/
 		└── codeq.yml     # Code quality workflow
 	└── dependabot.yml    # It's dependabot.
 ├── dist/                 # Wheel folder
-	└── [many wheels].whl # Ezekiel's wheels
+	└── [many wheels].whl # Ezekiel's Many-Eyed Nested Spoked Wheels Of Fire
 ├── docs/                 # Documentation that no one reads
 	└── basic_usage.md    # Basic usage instructions
 ├── images/               # The Photographs, initially empty because you haven't taken any
