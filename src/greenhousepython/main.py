@@ -66,7 +66,7 @@ def testing():
 # Clear the input
 # Set light_length to the stored input value
 
-def new_light_control():
+def new_light_control(isGui,output):
 	global light_length
 	global light_cycle
 	new_light_length = light_cycle.get()
@@ -78,7 +78,10 @@ def new_light_control():
 			else:
 				light_length = 24
 			print(light_length)
-			light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + str(light_length) + " hours per day.")
+			if isGui:
+				output.light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + str(light_length) + " hours per day.")
+			else:
+				assert True==False#Not Implemented
 		except ValueError as e:
 			print("Invalid value entered. Please enter a valid value.")
 			print("length is still " + str(light_length))
@@ -97,12 +100,11 @@ def water(control_parameter):
 		GPIO.output(waterPin, GPIO.LOW)
 		print("low")
 		
-def image_update(attrs,camera):
-    global image_label
+def image_update(attrs,camera,gui):
     cameraCapture(attrs,camera)
     img = ImageTk.PhotoImage(Image.open(lastFileName()))
-    image_label.configure(image=img) 
-    image_label.image = img
+    gui.image_label.configure(image=img) 
+    gui.image_label.image = img
 	
 # TODO: Fix
 def repeater(dt,latitude,longitude):
@@ -319,6 +321,7 @@ camera_cfg = theCamera.create_still_configuration()
 theCamera.start()
 if type == "GUI":
 	gui = GUI(resolution,header_font,norm_font)
+
 
 
 
