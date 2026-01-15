@@ -67,10 +67,13 @@ def testing():
 # Set light_length to the stored input value
 
 def new_light_control(mode,output):
-	global light_length
-	global light_cycle
-	new_light_length = light_cycle.get()
-	light_cycle.delete(0, len(new_light_length))
+	global light_lengthx
+	if mode == "GUI":
+		light_cycle = output.light_cycle
+		new_light_length = light_cycle.get()
+		light_cycle.delete(0, len(new_light_length))
+	else:
+		assert True==False#Not Implemented
 	if(new_light_length != ""):
 		try:
 			if(int(new_light_length) <= 24):
@@ -107,7 +110,7 @@ def image_update(attrs,camera,gui):
     gui.image_label.image = img
 	
 # TODO: Fix
-def repeater(dt,latitude,longitude):
+def repeater(dt,latitude,longitude,mode,output):
 	current_time = datetime.datetime.now(timezone.utc) - timedelta(hours=5)#add variable timezone, this is stuck on UTC-5
 	four_pm = datetime.datetime(datetime.datetime.today().year, datetime.datetime.today().month, datetime.datetime.today().day) + timedelta(hours=16)#This is the least efficient way to do this
 	#print(current_time.time())
@@ -115,7 +118,10 @@ def repeater(dt,latitude,longitude):
 	#print(current_time.time() > four_pm.time())
 	if current_time.time() > four_pm.time():
 		light(light_length,latitude,longitude,theSun)
-	window.after(dt, lambda : repeater(dt,latitude,longitude))
+	if mode == "GUI":
+		output.window.after(dt, lambda : repeater(dt,latitude,longitude,mode,output))
+	else:
+		assert True==False#Not Implemented
 
 def light(light_length,latitude,longitude,sun):
   mcpasd = datetime.datetime.now(timezone.utc) - timedelta(hours=5)
@@ -308,6 +314,8 @@ class GUI:
 		self.window.after(dt, lambda : repeater(dt,latitude,longitude))
 		self.window.mainloop()
 
+class CLI:
+	pass
 
 
 # startup ****************************************************************************************
@@ -321,10 +329,5 @@ camera_cfg = theCamera.create_still_configuration()
 theCamera.start()
 if type == "GUI":
 	gui = GUI(resolution,header_font,norm_font)
-
-
-
-
-
-
-
+else:
+	assert True==False#Not implemented
