@@ -31,10 +31,14 @@ if use_gpio:
 	from adafruit_mcp3xxx.analog_in import AnalogIn
 else:
 	from nonsense import GPIO, busio, digitalio, board, MCP, AnalogIn
+if mode == "GUI":
+	from PIL import ImageTk
+	import tkinter as tk
+	from tkinter import ttk
+else:
+	assert True == False#Not implemeted
 import cv2
-from PIL import Image, ImageTk
-import tkinter as tk
-from tkinter import ttk
+from PIL import Image
 import datetime
 from datetime import timedelta, timezone
 from suntime import Sun
@@ -327,6 +331,7 @@ if type == "GUI":
 	gui = GUI(resolution,header_font,norm_font,recording_status)
 else:
 	assert True==False#Not implemented
+
 
 
 
