@@ -104,9 +104,9 @@ def image_update(attrs,camera):
 def repeater(dt,latitude,longitude):
 	current_time = datetime.datetime.now(timezone.utc) - timedelta(hours=5)#add variable timezone, this is stuck on UTC-5
 	four_pm = datetime.datetime(datetime.datetime.today().year, datetime.datetime.today().month, datetime.datetime.today().day) + timedelta(hours=16)#This is the least efficient way to do this
-	print(current_time.time())
-	print(four_pm.time())
-	print(current_time.time() > four_pm.time())
+	#print(current_time.time())
+	#print(four_pm.time())
+	#print(current_time.time() > four_pm.time())
 	if current_time.time() > four_pm.time():
 		light(light_length,latitude,longitude,theSun)
 	window.after(dt, lambda : repeater(dt,latitude,longitude))
@@ -310,3 +310,4 @@ camera_cfg = theCamera.create_still_configuration()
 theCamera.start()
 window.after(dt, lambda : repeater(dt,latitude,longitude))
 window.mainloop()
+
