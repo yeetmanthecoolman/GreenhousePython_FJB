@@ -314,6 +314,8 @@ class GUI:
 		self.image_label.configure(image=img) 
 		self.image_label.image = img
 
+# CLI ****************************************************************************************	
+
 class CLI:
 	pass
 
@@ -329,8 +331,11 @@ camera_cfg = theCamera.create_still_configuration()
 theCamera.start()
 if type == "GUI":
 	gui = GUI(resolution,header_font,norm_font,recording_status)
+elif type == "CLI":
+	cli = CLI()
 else:
 	assert True==False#Not implemented
+
 
 
 
