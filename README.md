@@ -58,7 +58,7 @@ This project integrates sensors, relays, a GUI, and camera control to create a f
 📁 File Structure:
 
 ```
-primaryPython/
+GreenhousePython/
 ├── .github
 	├── /workflows        # Development workflows
 		└── codeq.yml     # Code quality workflow
@@ -87,7 +87,7 @@ primaryPython/
 📞 Need Help?
 Contact:
 
-	💡arosas@mcpasd.k12.wi.us
+	💡bshrago@mcpasd.k12.wi.us
 	
 	💡sp29174@students.mcpasd.k12.wi.us
 
