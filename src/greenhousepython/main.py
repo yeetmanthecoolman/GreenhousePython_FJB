@@ -16,7 +16,7 @@ waterPin = 16
 MAX_VALUE = 1024
 control_parameter = 0.0
 use_camera = False
-mode = "GUI"
+mode = "CLI"
 use_gpio = False
 
 if use_camera:
@@ -336,6 +336,18 @@ class GUI:
 		self.image_label.configure(image=img) 
 		self.image_label.image = img
 
+#this must be improved
+@app.command()
+def start_gui():
+	global mode
+	global resolution
+	global header_font
+	global norm_font
+	global recording_status
+	mode = "GUI"
+	gui = GUI(resolution,header_font,norm_font,recording_status)
+	
+
 # startup ****************************************************************************************
 
 #get attrs
@@ -346,6 +358,7 @@ elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
