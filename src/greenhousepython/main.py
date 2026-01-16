@@ -152,20 +152,20 @@ def light(light_length : float,latitude : float,longitude : float):
 	GPIO.output(lightPin, light_on)
 
 def getDataAttributes():
-    dataIndex = open("dataIndex.txt", "r")#this must be fixed
-    last_file_number = dataIndex.readline().split()[1]
+    cfg = open("cfg.txt", "r")#this must be fixed
+    last_file_number = cfg.readline().split()[1]
     last_file_number = int(last_file_number)
-    interval_in_seconds = dataIndex.readline().split()[1]
+    interval_in_seconds = cfg.readline().split()[1]
     interval_in_seconds = int(interval_in_seconds)
-    prefix = dataIndex.readline().split()[1]
-    dataIndex.close()
+    prefix = cfg.readline().split()[1]
+    cfg.close()
     return [last_file_number, interval_in_seconds, prefix]
 
-# sets attributes in dataindex.txt file
+# sets attributes in cfg.txt file
 def setAttributes(attributes):
-    dataIndex = open("dataIndex.txt", "w")
-    dataIndex.writelines(["last_file_number: " + str(attributes[0]), '\n', "interval_in_seconds: " + str(attributes[1]), '\n', "file_name_prefix: " + attributes[2]])
-    dataIndex.close()
+    cfg = open("cfg.txt", "w")
+    cfg.writelines(["last_file_number: " + str(attributes[0]), '\n', "interval_in_seconds: " + str(attributes[1]), '\n', "file_name_prefix: " + attributes[2]])
+    .close()
 
 #input camera attributes and capture image, updates attributes and returns new attributes
 @app.command()
@@ -354,22 +354,3 @@ elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
