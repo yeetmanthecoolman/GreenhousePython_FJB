@@ -122,7 +122,11 @@ def repeater(dt : float,latitude : float,longitude : float,mode = "CLI",output =
 	#print(current_time.time() > four_pm.time())
 	if current_time.time() > four_pm.time():
 		light(light_length,latitude,longitude,theSun)
+	#water stuff
 	if mode == "GUI":
+		output.bzone1.config(text = "Left Bed: " + str(get_data(0)))
+		output.bzone2.config(text = "Middle Bed: " + str(get_data(1)))
+		output.bzone3.config(text = "Right Bed: " + str(get_data(2)))
 		output.window.after(dt, lambda : repeater(dt,latitude,longitude,mode,output))
 	else:
 		assert True==False#Not Implemented
@@ -338,6 +342,7 @@ elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
