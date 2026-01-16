@@ -19,7 +19,7 @@ class GPIO:
     pass
 
 class busio:
-  def SPI(clock, MSIO, MOSI):
+  def SPI(**kwargs):
     pass
 
 class digitalio:
