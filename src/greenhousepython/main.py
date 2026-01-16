@@ -35,13 +35,14 @@ if mode == "GUI":
 	from PIL import ImageTk
 	import tkinter as tk
 	from tkinter import ttk
-else:
+elif mode != "CLI":
 	assert True == False#Not implemeted
 import cv2
 from PIL import Image
 import datetime
 from datetime import timedelta, timezone
 from suntime import Sun
+from typer import Typer
 
 # init part 1
 
@@ -58,6 +59,7 @@ chan_list = [chan0, chan1, chan2]
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(waterPin, GPIO.OUT)
 GPIO.setup(lightPin, GPIO.OUT)
+app = Typer()
 
 # methods   ***********************************************************************************
 	
@@ -67,6 +69,7 @@ GPIO.setup(lightPin, GPIO.OUT)
 # Clear the input
 # Set light_length to the stored input value
 
+@app.command()
 def new_light_control(mode,output):
 	global light_lengthx
 	if mode == "GUI":
@@ -91,6 +94,7 @@ def new_light_control(mode,output):
 			print("length is still " + str(light_length))
 
 #break things into 20% intervals from 0 to 50k based on the values returned from the MCP
+@app.command()
 def water(control_parameter):
 	global MAX_VALUE
 	moisture = 0
@@ -105,6 +109,7 @@ def water(control_parameter):
 		print("low")
 
 # TODO: Fix
+@app.command()
 def repeater(dt,latitude,longitude,mode,output):
 	current_time = datetime.datetime.now(timezone.utc) - timedelta(hours=5)#add variable timezone, this is stuck on UTC-5
 	four_pm = datetime.datetime(datetime.datetime.today().year, datetime.datetime.today().month, datetime.datetime.today().day) + timedelta(hours=16)#This is the least efficient way to do this
@@ -118,6 +123,7 @@ def repeater(dt,latitude,longitude,mode,output):
 	else:
 		assert True==False#Not Implemented
 
+@app.command()
 def light(light_length,latitude,longitude,sun):
   mcpasd = datetime.datetime.now(timezone.utc) - timedelta(hours=5)
   # Get today's sunrise and sunset in CST
@@ -135,7 +141,7 @@ def light(light_length,latitude,longitude,sun):
   else:
     light_on = False
   GPIO.output(lightPin, light_on)
-	
+
 def getDataAttributes():
     dataIndex = open("dataIndex.txt", "r")#this must be fixed
     last_file_number = dataIndex.readline().split()[1]
@@ -153,6 +159,7 @@ def setAttributes(attributes):
     dataIndex.close()
 
 #input camera attributes and capture image, updates attributes and returns new attributes
+@app.command()
 def cameraCapture(attributes,camera):
 	if not use_camera:
 		return attributes
@@ -168,6 +175,7 @@ def lastFileName():
         return "../../images/placeholder.jpg"
     return "../../images/" + attributes[2] + str(attributes[0]) + ".jpg"
 
+@app.command()
 def create_video(image_paths, output_video_path, fps=24, size=None):
 	if not image_paths:
 		raise ValueError("The list of image paths is empty")
@@ -314,12 +322,6 @@ class GUI:
 		self.image_label.configure(image=img) 
 		self.image_label.image = img
 
-# CLI ****************************************************************************************	
-
-class CLI:
-	pass
-
-
 # startup ****************************************************************************************
 
 #get attrs
@@ -332,9 +334,10 @@ theCamera.start()
 if type == "GUI":
 	gui = GUI(resolution,header_font,norm_font,recording_status)
 elif type == "CLI":
-	cli = CLI()
+	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
