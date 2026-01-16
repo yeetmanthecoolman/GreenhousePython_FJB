@@ -34,9 +34,6 @@ def setAttributes():
 
 
 # CFG ****************************************************************************************
-norm_font = 'Calibri 18'
-recording_status = "Start Recording"
-light_length = 16
 header_font = 'Calibri 50 bold'
 resolution = '1920x1080'
 latitude = 43.0972
@@ -102,7 +99,7 @@ theCamera.start()
 
 @app.command()
 def new_light_control(mode = "Cli",output = None):
-	global light_lengthx
+	global attrs
 	if mode == "GUI":
 		light_cycle = output.light_cycle
 		new_light_length = light_cycle.get()
@@ -111,18 +108,18 @@ def new_light_control(mode = "Cli",output = None):
 		assert True==False#Not Implemented
 	if(new_light_length != ""):
 		try:
-			if(int(new_light_length) <= 24):
-				light_length = int(new_light_length)
+			if(new_light_length <= 24):
+				attrs["light_length"] = str(new_light_length)
 			else:
-				light_length = 24
-			print(light_length)
+				attrs["light_length"] = "24"
+			print(attrs["light_length"])
 			if mode == "GUI":
-				output.light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + str(light_length) + " hours per day.")
+				output.light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + attrs["light_length"] + " hours per day.")
 			else:
 				assert True==False#Not Implemented
 		except ValueError as e:
 			print("Invalid value entered. Please enter a valid value.")
-			print("length is still " + str(light_length))
+			print("length is still " + attrs["light_length"])
 
 #break things into 20% intervals from 0 to 50k based on the values returned from the MCP
 @app.command()
@@ -151,7 +148,7 @@ def repeater(dt : float,latitude : float,longitude : float,mode = "CLI",output =
 	#print(four_pm.time())
 	#print(current_time.time() > four_pm.time())
 	if current_time.time() > four_pm.time():
-		light(light_length,latitude,longitude)
+		light(attrs)
 		water()
 	if mode == "GUI":
 		output.bzone1.config(text = "Left Bed: " + str(get_data(0)))
@@ -162,7 +159,8 @@ def repeater(dt : float,latitude : float,longitude : float,mode = "CLI",output =
 		assert True==False#Not Implemented
 
 @app.command()
-def light(light_length : float,latitude : float,longitude : float):
+def light():
+	global attrs
 	global theSun
 	mcpasd = datetime.datetime.now(timezone.utc) - timedelta(hours=5)
 	# Get today's sunrise and sunset in CST
@@ -173,7 +171,7 @@ def light(light_length : float,latitude : float,longitude : float):
 	if today_sr > today_ss:
 		today_ss = today_ss + timedelta(days=1)
 	today_suntime = today_ss - today_sr
-	light_on_time = today_suntime - today_suntime + timedelta(hours = light_length)
+	light_on_time = today_suntime - today_suntime + timedelta(hours = attrs["light_length"])
 	today_suntime = mcpasd - today_sr
 	if(mcpasd.time() > today_ss.time() and today_suntime < light_on_time):
 		light_on = True
@@ -183,7 +181,7 @@ def light(light_length : float,latitude : float,longitude : float):
 
 #input camera attributes and capture image, updates attributes and returns new attributes
 @app.command()
-def cameraCapture(attributes = getDataAttributes(),camera = theCamera):
+def cameraCapture(attributes = getDataAttributes(),camera = theCamera):#update to support new attr system
 	if not use_camera:
 		return attributes
 	name = "../../images/" + attributes["file_name_prefix"] + (str(int(attributes["last_file_number"]) + 1)) + ".jpg"
@@ -193,10 +191,10 @@ def cameraCapture(attributes = getDataAttributes(),camera = theCamera):
 	return attributes
 
 def lastFileName():
-    attributes = getDataAttributes()
+    global attrs
     if (attributes[0] == 0):
         return "../../images/placeholder.jpg"
-    return "../../images/" + attributes["file_name_prefix"] + str(attributes["last_file_number"]) + ".jpg"
+    return "../../images/" + attrs["file_name_prefix"] + str(attrs["last_file_number"]) + ".jpg"
 
 @app.command()
 def create_video(image_paths, output_video_path : str, fps : int = 24, size : str = None):
@@ -244,7 +242,7 @@ def compare(num):
 # GUI ****************************************************************************************	
 
 class GUI:
-	def __init__(self,resolution,header_font,norm_font,recording_status):
+	def __init__(self,attrs):
 		# window
 		self.window = tk.Tk()
 		self.window.title =('Greenhouse')
@@ -265,8 +263,8 @@ class GUI:
 		self.image_label = ttk.Label(master = self.image_frame, image = self.last_plant_image)
 		
 		self.image_label_frame = ttk.Frame(master = self.image_frame)
-		self.interval_label = ttk.Label(master = self.image_label_frame, text = 'Interval is set to ', font = norm_font)
-		self.capture_label = ttk.Label(master = self.image_label_frame, text = 'There have been __ captures\nsince last time-lapse.', font = norm_font)
+		self.interval_label = ttk.Label(master = self.image_label_frame, text = 'Interval is set to ', font = attrs["norm_font"])
+		self.capture_label = ttk.Label(master = self.image_label_frame, text = 'There have been __ captures\nsince last time-lapse.', font = attrs["norm_font"])
 		
 		# packing image stuff
 		self.image_label.pack(side = 'left', padx = 10, pady = 10)
@@ -277,15 +275,15 @@ class GUI:
 		
 		# far right info
 		self.top_right_frame = ttk.Frame(master = self.layer1_frame)
-		self.last_capture = ttk.Label(master = self.top_right_frame, text = 'Last capture was taken ___ minutes ago.', font = norm_font)
+		self.last_capture = ttk.Label(master = self.top_right_frame, text = 'Last capture was taken ___ minutes ago.', font = attrs["norm_font"])
 		self.zone_frame = ttk.Frame(master = self.top_right_frame)
-		self.zone_label = ttk.Label(master = self.zone_frame, text = "Zone Moistures", font = norm_font)
+		self.zone_label = ttk.Label(master = self.zone_frame, text = "Zone Moistures", font = attrs["norm_font"])
 		self.bzone1 = ttk.Button(master = self.zone_frame, text = "Left Bed: " + str(get_data(0)))#These only update once
 		self.bzone2 = ttk.Button(master = self.zone_frame, text = "Middle Bed: " + str(get_data(1)))
 		self.bzone3 = ttk.Button(master = self.zone_frame, text = "Right Bed: " + str(get_data(2)))
 
 		self.moisture_frame = ttk.Frame(master = self.top_right_frame)
-		self.moisture_label = ttk.Label(master = self.moisture_frame, text = "Select Moisture Level", font = norm_font)
+		self.moisture_label = ttk.Label(master = self.moisture_frame, text = "Select Moisture Level", font = attrs["norm_font"])
 		self.top_buttons = ttk.Frame(master = self.moisture_frame)
 		self.bottom_buttons = ttk.Frame(master = self.moisture_frame)
 		self.bmoisture0 = ttk.Button(master = self.top_buttons, text = "0%", command = lambda : water(0))#these should not be hardcoded
@@ -326,8 +324,8 @@ class GUI:
 		self.manual_pic_button = ttk.Button(master = self.layer2_frame, text = "Take Manual\nPicture", command = lambda : self.image_update(attrs,theCamera))
 		
 		# should start recording function
-		self.start_record = ttk.Button(master = self.layer2_frame, text = recording_status)
-		self.light_label = ttk.Label(master = self.layer2_frame, text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + str(light_length) + " hours per day.", font = norm_font)
+		self.start_record = ttk.Button(master = self.layer2_frame, text = attrs["recording_status"])
+		self.light_label = ttk.Label(master = self.layer2_frame, text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + attrs["light_length"] + " hours per day.", font = attrs["norm_font"])
 		self.light_cycle = ttk.Entry(master = self.layer2_frame)
 		self.enter_button = ttk.Button(master = self.layer2_frame, text = "Enter Hours", command = lambda : new_light_control("GUI", self))
 		
@@ -349,23 +347,20 @@ class GUI:
 #this must be improved
 @app.command()
 def start_gui():
-	global mode
-	global resolution
-	global header_font
-	global norm_font
-	global recording_status
+	global attrs
 	mode = "GUI"
-	gui = GUI(resolution,header_font,norm_font,recording_status)
+	gui = GUI(attrs)
 	
 
 # startup ****************************************************************************************
 
 if mode == "GUI":
-	gui = GUI(resolution,header_font,norm_font,recording_status)
+	gui = GUI(attrs)
 elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
