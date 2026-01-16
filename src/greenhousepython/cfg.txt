@@ -1,0 +1,16 @@
+last_file_number:0
+interval_in_milliseconds:1000
+file_name_prefix:gi
+norm_font:Calibri 18
+light_length:16
+header_font:Calibri 50 bold
+resolution:1920x1080
+latitude:43.0972
+longitude:-89.5043
+lightPin:21
+waterPin:16
+MAX_VALUE:1024
+control_parameter:0.0
+use_camera:False
+mode:CLI
+use_gpio:False

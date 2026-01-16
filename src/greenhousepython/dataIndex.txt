@@ -1,3 +1,0 @@
-last_file_number:0
-interval_in_milliseconds:1000
-file_name_prefix:gi
