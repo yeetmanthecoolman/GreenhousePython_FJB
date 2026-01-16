@@ -9,15 +9,16 @@ app = Typer()
 
 #read configuration information from cfg.txt and use it
 def getDataAttributes():
+	global attrs
     cfg = open("cfg.txt", "r")
     accumulator = {}
 	for thing in cfg.readlines():#find all things seperated by newlines
 		kvp = thing.split(":")#get key-value pairs
 		accumulator[kvp[0]] = kvp[1]#add key-value pair to dictionary
 	cfg.close()
-    return accumulator
+    attrs = accumulator
 
-attrs = getDataAttributes()
+attrs = {}
 
 #rewrite the list with updated values
 def setAttributes():
@@ -181,18 +182,19 @@ def light():
 
 #input camera attributes and capture image, updates attributes and returns new attributes
 @app.command()
-def cameraCapture(attributes = getDataAttributes(),camera = theCamera):#update to support new attr system
+def cameraCapture(camera = theCamera):#update to support new attr system
+	global attrs
 	if not use_camera:
-		return attributes
-	name = "../../images/" + attributes["file_name_prefix"] + (str(int(attributes["last_file_number"]) + 1)) + ".jpg"
+		return attrs
+	name = "../../images/" + attrs["file_name_prefix"] + (str(int(attrs["last_file_number"]) + 1)) + ".jpg"
 	camera.capture_file(name)
-	attributes["last_file_number"] = str(int(attributes["last_file_number"]) + 1)
+	attrs["last_file_number"] = str(int(attrs["last_file_number"]) + 1)
 	setAttributes()
-	return attributes
+	return attrs
 
 def lastFileName():
     global attrs
-    if (attributes[0] == 0):
+    if (attrs["last_file_number"] == 0):
         return "../../images/placeholder.jpg"
     return "../../images/" + attrs["file_name_prefix"] + str(attrs["last_file_number"]) + ".jpg"
 
@@ -360,6 +362,7 @@ elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
