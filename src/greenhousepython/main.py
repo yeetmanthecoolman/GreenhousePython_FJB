@@ -78,7 +78,15 @@ theCamera.start()
 
 
 # methods   ***********************************************************************************
-	
+
+#a simple command to allow the user to change settings-this lets them define nonsense parameters, but I could care less, because my getdataattributes can ignore them.
+#However, this almost certainly breaks if you pass in a thing that contains a newline, which we should fix later.
+@app.command()
+def change_setting(key : str, value : str):
+	global attrs
+	attrs[key] = value
+	setAttributes()
+
 # new_light_control
 # 
 # Get user input and store it
@@ -349,6 +357,7 @@ elif attrs["mode"] == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
