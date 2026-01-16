@@ -35,7 +35,6 @@ def setAttributes():
 
 
 # CFG ****************************************************************************************
-header_font = 'Calibri 50 bold'
 resolution = '1920x1080'
 latitude = 43.0972
 longitude = -89.5043
@@ -251,7 +250,7 @@ class GUI:
 		self.window.geometry(resolution)#This needs to be changed
 		
 		# title
-		self.title_label = ttk.Label(master = self.window, text = 'Greenhouse', font = header_font)
+		self.title_label = ttk.Label(master = self.window, text = 'Greenhouse', font = attrs["header_font"])
 		self.title_label.pack()
 		
 		#first layer
@@ -362,6 +361,7 @@ elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
