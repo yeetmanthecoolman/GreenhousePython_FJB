@@ -152,14 +152,12 @@ def light(light_length : float,latitude : float,longitude : float):
 	GPIO.output(lightPin, light_on)
 
 def getDataAttributes():
-    cfg = open("cfg.txt", "r")#this must be fixed
-    last_file_number = cfg.readline().split()[1]
-    last_file_number = int(last_file_number)
-    interval_in_seconds = cfg.readline().split()[1]
-    interval_in_seconds = int(interval_in_seconds)
-    prefix = cfg.readline().split()[1]
-    cfg.close()
-    return [last_file_number, interval_in_seconds, prefix]
+    cfg = open("cfg.txt", "r")
+    accumulator = {}
+	for thing in cfg.readlines():#find all things seperated by newlines
+		kvp = thing.split(":")#get key-value pairs
+		accumulator[kvp[0]] = kvp[1]#add key-value pair to dictionary
+    return accumulator
 
 # sets attributes in cfg.txt file
 def setAttributes(attributes):
@@ -172,9 +170,9 @@ def setAttributes(attributes):
 def cameraCapture(attributes = getDataAttributes(),camera = theCamera):
 	if not use_camera:
 		return attributes
-	name = "../../images/" + attributes[2] + (str(attributes[0] + 1)) + ".jpg"
+	name = "../../images/" + attributes["file_name_prefix"] + (str(int(attributes["last_file_number"]) + 1)) + ".jpg"
 	camera.capture_file(name)
-	attributes[0] += 1
+	attributes["last_file_number"] = str(int(attributes["last_file_number"]) + 1)
 	setAttributes(attributes)
 	return attributes
 
@@ -182,7 +180,7 @@ def lastFileName():
     attributes = getDataAttributes()
     if (attributes[0] == 0):
         return "../../images/placeholder.jpg"
-    return "../../images/" + attributes[2] + str(attributes[0]) + ".jpg"
+    return "../../images/" + attributes["file_name_prefix"] + str(attributes["last_file_number"]) + ".jpg"
 
 @app.command()
 def create_video(image_paths, output_video_path : str, fps : int = 24, size : str = None):
@@ -354,3 +352,4 @@ elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
