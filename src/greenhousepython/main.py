@@ -93,7 +93,6 @@ def change_setting(key : str, value : str):
 # Clear the input
 # Set light_length to the stored input value
 
-@app.command()
 def new_light_control(output = None):
 	global attrs
 	if attrs["mode"] == "GUI":
@@ -357,6 +356,7 @@ elif attrs["mode"] == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
