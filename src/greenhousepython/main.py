@@ -14,16 +14,22 @@ def getDataAttributes():
 	for thing in cfg.readlines():#find all things seperated by newlines
 		kvp = thing.split(":")#get key-value pairs
 		accumulator[kvp[0]] = kvp[1]#add key-value pair to dictionary
+	cfg.close()
     return accumulator
 
 attrs = getDataAttributes()
 
+#rewrite the list with updated values
 def setAttributes():
 	global attrs
     cfg = open("cfg.txt", "w")
-	#todo: 
-    cfg.writelines(["last_file_number: " + str(attributes[0]), '\n', "interval_in_seconds: " + str(attributes[1]), '\n', "file_name_prefix: " + attributes[2]])
-    .close()
+	accumulator = []
+	keys = attrs.keys()
+	for key in keys:
+		accumulator.append(key + ":" + attrs[key])
+		accumulator.append("\n")
+    cfg.writelines(accumulator)
+    cfg.close()
 
 
 
@@ -183,7 +189,7 @@ def cameraCapture(attributes = getDataAttributes(),camera = theCamera):
 	name = "../../images/" + attributes["file_name_prefix"] + (str(int(attributes["last_file_number"]) + 1)) + ".jpg"
 	camera.capture_file(name)
 	attributes["last_file_number"] = str(int(attributes["last_file_number"]) + 1)
-	setAttributes(attributes)
+	setAttributes()
 	return attributes
 
 def lastFileName():
@@ -360,6 +366,7 @@ elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
