@@ -14,6 +14,7 @@ dt = 200
 lightPin = 21
 waterPin = 16
 MAX_VALUE = 1024
+control_parameter = 0.0
 use_camera = False
 mode = "GUI"
 use_gpio = False
@@ -99,8 +100,11 @@ def new_light_control(mode = "Cli",output = None):
 
 #break things into 20% intervals from 0 to 50k based on the values returned from the MCP
 @app.command()
-def water(control_parameter : float):
+def water(input : float = None):
 	global MAX_VALUE
+	global control_parameter
+	if input != None:
+		control_parameter = input
 	moisture = 0
 	for x in range(3):#this logic must be fixed, it does not comply w/ the design reqs
 		moisture += get_data(x)
@@ -122,7 +126,7 @@ def repeater(dt : float,latitude : float,longitude : float,mode = "CLI",output =
 	#print(current_time.time() > four_pm.time())
 	if current_time.time() > four_pm.time():
 		light(light_length,latitude,longitude,theSun)
-	#water stuff
+		water()
 	if mode == "GUI":
 		output.bzone1.config(text = "Left Bed: " + str(get_data(0)))
 		output.bzone2.config(text = "Middle Bed: " + str(get_data(1)))
@@ -342,6 +346,7 @@ elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
