@@ -19,7 +19,9 @@ def getDataAttributes():
 attrs = getDataAttributes()
 
 def setAttributes():
+	global attrs
     cfg = open("cfg.txt", "w")
+	#todo: 
     cfg.writelines(["last_file_number: " + str(attributes[0]), '\n', "interval_in_seconds: " + str(attributes[1]), '\n', "file_name_prefix: " + attributes[2]])
     .close()
 
@@ -358,6 +360,7 @@ elif mode == "CLI":
 	app()
 else:
 	assert True==False#Not implemented
+
 
 
 
