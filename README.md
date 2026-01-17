@@ -26,7 +26,7 @@ This project integrates sensors, relays, a GUI, and camera control to create a f
 
 	😵‍💫Check: are you on the right system? 
 
-		If you are on anything other than a Raspberry Pi running Ubuntu Server, you are on an unsupported platform*. While this project may expand to cover you in the future, it doesn't right now. On the other hand, we certainly aren't going to try to stop you from ignoring this paragraph and building this anyway; just don't expect a warantee or whatever. 
+		If you are on anything other than a Raspberry Pi running a minimized install of Ubuntu Server, you are on an unsupported platform*. While this project may expand to cover you in the future, it doesn't right now. On the other hand, we certainly aren't going to try to stop you from ignoring this paragraph and building this anyway; just don't expect a warantee or whatever. 
 
 	😵‍💫Check: are you a superuser?
 
@@ -38,14 +38,15 @@ This project integrates sensors, relays, a GUI, and camera control to create a f
 	***IF THIS BREAKS YOUR SYSTEM, DON'T BE SURPRISED.*** 
 	With that out of the way:
 
-	💡Release upgrade: We only support Ubuntu Server 25.10 officially*. Therefore, BEING VERY CLEAR THAT THIS IS PLAYING WITH FIRE, you can run this to get there:
-		sudo apt full-upgrade && sudo do-release-upgrade -d && reboot
+	💡Release upgrade: We only support Ubuntu Server 25.10 officially*. Therefore, BEING VERY CLEAR THAT THIS IS PLAYING WITH FIRE, you can run these two commands to get there:
+		sudo apt update && sudo apt full-upgrade && reboot
+		sudo do-release-upgrade -d && reboot
 	
 	💡In order to build this software, you will need some dependencies. In order to get them, you can run this command. THIS WILL RESTART YOUR COMPUTER.
-		cd ~/ && sudo apt install --install-recommends fortune g++ libkms++-dev pkgconf ffmpeg libopenjp2-7 libcamera-dev libfmt-dev libdrm-dev git pipx gcc gcc-aarch64-linux-gnu libcap-dev python3-dev python3-tk libsm6 libxest6 libgl1 && git clone https://github.com/sp29174/GreenhousePython.git && pipx ensurepath && reboot
+		cd ~/ && sudo apt install --install-recommends xvfb fortune g++ libkms++-dev pkgconf ffmpeg libopenjp2-7 libcamera-dev libfmt-dev libdrm-dev git pipx gcc gcc-aarch64-linux-gnu libcap-dev python3-dev python3-tk libsm6 libgl1 && git clone https://github.com/sp29174/GreenhousePython.git && pipx ensurepath && reboot
 
 	💡In order to run this software, you will need other, different dependencies. In order to get them, you can run this command. It will start the script, and you should be able to control the greenhouse. We do not yet have the camera nonsense working, hence the camera-nonsense extra is broken. Do not use it, unless you can fix it, in which case, DM me.
-		cd ~/ && pipx install -vvv poetry && cd ./GreenhousePython && poetry install -vvv --all-groups --extras rpi --compile && cd ./src/greenhousepython && poetry run -vvv python -vvi ./main.py start-gui
+		cd ~/ && pipx install -vvv poetry && cd ./GreenhousePython && poetry install -vvv --all-groups --extras rpi --compile && cd ./src/greenhousepython && xvfb-run poetry run -vvv python -vvi ./main.py start-gui
 
 	😵‍💫Need a wheel? Conveniently, I made that real simple:
 		cd ~/GreenhousePython && poetry build -f wheel
