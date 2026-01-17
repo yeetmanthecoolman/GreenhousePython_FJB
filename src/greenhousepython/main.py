@@ -37,11 +37,11 @@ def setAttributes():
 # Initialization ****************************************************************************************
 
 getDataAttributes()
-if bool(attrs["use_camera"]):
+if attrs["use_camera"] == "True":
 	from picamera2 import Picamera2
 else:
 	from nonsense import Picamera2
-if bool(attrs["use_gpio"]):
+if attrs["use_gpio"] == "True":
 	import RPi.GPIO as GPIO
 	import busio
 	import digitalio
@@ -118,7 +118,7 @@ def water(input : float = None):
 	global attrs
 	if input != None:
 		attrs["control_parameter"] = str(input)
-	elif bool(attrs["is_debug"]):
+	elif attrs["is_debug"] == "True":
 		print("The system says your input is None, BTW")
 	moisture = 0
 	for x in range(3):#this logic must be fixed, it does not comply w/ the design reqs
@@ -177,7 +177,7 @@ def light(): #Todo: Fix Logic
 @app.command()
 def cameraCapture(camera = theCamera):#update to support new attr system, and to not badly reimplement last_file_name
 	global attrs
-	if not bool(attrs["use_camera"]):
+	if attrs["use_camera"] == "False":
 		return attrs
 	name = "../../images/" + attrs["file_name_prefix"] + (str(int(attrs["last_file_number"]) + 1)) + ".jpg"
 	camera.capture_file(name)
@@ -350,4 +350,5 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
