@@ -16,7 +16,7 @@ def getDataAttributes():
 	accumulator = {}
 	for thing in cfg.readlines():#find all things seperated by newlines
 		kvp = thing.split(":")#get key-value pairs
-		accumulator[kvp[0]] = kvp[1]#add key-value pair to dictionary
+		accumulator[kvp[0]] = kvp[1].rstrip("\n")#add key-value pair to dictionary, no random trailing newline for you
 	cfg.close()
 	attrs = accumulator
 
@@ -350,6 +350,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
