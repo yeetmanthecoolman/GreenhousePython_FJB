@@ -12,25 +12,25 @@ mode = "CLI"
 #read configuration information from cfg.txt and use it
 def getDataAttributes():
 	global attrs
-    cfg = open("cfg.txt", "r")
-    accumulator = {}
+	cfg = open("cfg.txt", "r")
+	accumulator = {}
 	for thing in cfg.readlines():#find all things seperated by newlines
 		kvp = thing.split(":")#get key-value pairs
 		accumulator[kvp[0]] = kvp[1]#add key-value pair to dictionary
 	cfg.close()
-    attrs = accumulator
+	attrs = accumulator
 
 #rewrite the list with updated values
 def setAttributes():
 	global attrs
-    cfg = open("cfg.txt", "w")#open file to write
+	cfg = open("cfg.txt", "w")#open file to write
 	accumulator = []
 	keys = attrs.keys()#get all the keys
 	for key in keys:
 		accumulator.append(key + ":" + attrs[key])#assemble key and values into new format
 		accumulator.append("\n")#seperate with newlines
-    cfg.writelines(accumulator)#append to file
-    cfg.close()
+		cfg.writelines(accumulator)#append to file
+	cfg.close()
 
 
 
@@ -350,3 +350,4 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
