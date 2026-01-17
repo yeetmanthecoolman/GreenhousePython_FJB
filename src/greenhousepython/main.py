@@ -146,6 +146,7 @@ def repeater(output = None):
 	if current_time.time() > four_pm.time():
 		light()
 		water()
+		cameraCapture()
 	if mode == "GUI":
 		output.bzone1.config(text = "Left Bed: " + str(get_data(0)))
 		output.bzone2.config(text = "Middle Bed: " + str(get_data(1)))
@@ -177,12 +178,13 @@ def light(): #Todo: Fix Logic
 
 #input camera attributes and capture image, updates attributes and returns new attributes
 @app.command()
-def cameraCapture(camera = theCamera):#update to support new attr system, and to not badly reimplement last_file_name
+def cameraCapture():#update to support new attr system, and to not badly reimplement last_file_name
+	global theCamera
 	global attrs
 	if attrs["use_camera"] == "False":
 		return attrs
 	name = "../../images/" + attrs["file_name_prefix"] + (str(int(attrs["last_file_number"]) + 1)) + ".jpg"
-	camera.capture_file(name)
+	theCamera.capture_file(name)
 	attrs["last_file_number"] = str(int(attrs["last_file_number"]) + 1)
 	setAttributes()
 	return attrs
@@ -352,6 +354,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
