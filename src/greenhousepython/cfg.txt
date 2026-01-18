@@ -15,3 +15,8 @@ use_camera:False
 use_gpio:False
 is_debug:True
 recording_status:not dead
+beds:3
+bed0:False
+bed1:False
+bed2:False
+deadband:0.1
