@@ -123,15 +123,16 @@ def water(input : float = None):
 	elif attrs["is_debug"] == "True":
 		print("The system says your input is None, BTW")
 	moisture = 0
-	for x in range(int(attrs["beds"])):#this logic must be fixed, it does not comply w/ the design reqs
-		moisture += get_data(x)
-	moisture = moisture / 3
-	if(int(attrs["MAX_VALUE"]) * float(attrs["control_parameter"]) > moisture):
-		GPIO.output(int(attrs["waterPin"]), GPIO.HIGH)
-		print("high")
-	else:
-		GPIO.output(int(attrs["waterPin"]), GPIO.LOW)
-		print("low")
+	for x in range(int(attrs["beds"])):
+		moisture = get_data(x)
+		if (attrs["bed" + str(x)] == "True") and (int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter"]) - float(attrs["deadband"])) < moisture):
+			GPIO.output(int(attrs["waterPin"]), GPIO.HIGH)#replace with whatever turns on bed x
+			attrs["bed" + str(x)] = "False"
+			setAttributes()
+		elif (attrs["bed" + str(x)] == "False") and (int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter"]) + float(attrs["deadband"])) > moisture):
+			GPIO.output(int(attrs["waterPin"]), GPIO.LOW)#replace with whatever turns off bed x
+			attrs["bed" + str(x)] = "False"
+			setAttributes()
 
 # TODO: Fix the Nonsense
 def repeater(output):
@@ -350,6 +351,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
