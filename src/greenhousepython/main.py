@@ -56,7 +56,7 @@ import cv2
 from PIL import Image, ImageTk
 import datetime
 from datetime import timedelta, timezone
-from suntime import Sun
+from astral import sun, Observer
 
 # Postinitialization
 
@@ -73,7 +73,6 @@ chan_list = [chan0, chan1, chan2]
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(int(attrs["waterPin"]), GPIO.OUT)
 GPIO.setup(int(attrs["lightPin"]), GPIO.OUT)
-theSun = Sun(float(attrs["latitude"]), float(attrs["longitude"]))
 theCamera = Picamera2()
 camera_cfg = theCamera.create_still_configuration()
 theCamera.start()
@@ -153,10 +152,10 @@ def repeater(output):
 	output.window.after(int(attrs["interval_in_milliseconds"]), lambda : repeater(output))
 
 @app.command()
-def light(): #Todo: Fix Logic
+def light(): 
 	global attrs
-	global theSun
-	mcpasd = datetime.datetime.now(timezone.utc) - timedelta(hours=5)
+	observer = Observer(float(attrs["latitude"]),float(attrs["Longitude"]),float(attrs["elevation"]))
+	mcpasd = datetime.datetime.now(timezone.utc)
 	# Get today's sunrise and sunset in CST
 	today_sr = theSun.get_sunrise_time() + timedelta(hours=7)
 	today_ss = theSun.get_sunset_time() + timedelta(hours=7)
@@ -351,6 +350,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
