@@ -180,8 +180,6 @@ def lastFileName():
 def create_video(image_paths, output_video_path : str, fps : int = 24, size : str = None):
 	if not image_paths:
 		raise ValueError("The list of image paths is empty")
-	print(":IORHGUIGHUBHSULIGH")
-	print(image_paths[0])
 	first_frame = cv2.imread(image_paths[0])
 	if first_frame is None:
 		raise ValueError("Cannot read image at path")
@@ -327,5 +325,6 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
