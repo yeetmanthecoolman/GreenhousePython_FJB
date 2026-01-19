@@ -326,7 +326,7 @@ class oldGUI:
 @app.command()
 def start_gui():
 	global attrs
-	gui = GUI(attrs)
+	gui = GUI()
 	
 @app.command()
 def start_old_gui():
@@ -336,6 +336,7 @@ def start_old_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
