@@ -48,6 +48,7 @@ else:
 	from nonsense import GPIO, busio, digitalio, board, MCP, AnalogIn
 import tkinter as tk
 from tkinter import ttk
+import wx
 import cv2
 from PIL import Image, ImageTk
 from datetime import datetime, timedelta, timezone
@@ -210,8 +211,11 @@ def get_data(num):
 	return chan_list[num].value
 	
 # GUI ****************************************************************************************	
-
 class GUI:
+	pass
+
+
+class oldGUI:
 	def __init__(self,attrs):#fix attribute handling in here
 		# window
 		self.window = tk.Tk()
@@ -320,9 +324,15 @@ def start_gui():
 	global attrs
 	gui = GUI(attrs)
 	
+@app.command()
+def start_old_gui():
+	global attrs
+	gui = oldGUI(attrs)
+	
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
