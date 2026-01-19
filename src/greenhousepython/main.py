@@ -299,13 +299,13 @@ class GUI:
 		# captures picture, command= cameraCapture
 		# ISSUE: taking picture on boot
 		#I disagree, that's a feature!
-		self.manual_pic_button = ttk.Button(master = self.layer2_frame, text = "Take Manual\nPicture", command = lambda : self.image_update(attrs,theCamera))
+		self.manual_pic_button = ttk.Button(master = self.layer2_frame, text = "Take Manual\nPicture", command = lambda : self.image_update(attrs))
 		
 		# should start recording function
 		self.start_record = ttk.Button(master = self.layer2_frame, text = attrs["recording_status"])
 		self.light_label = ttk.Label(master = self.layer2_frame, text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + attrs["light_length"] + " hours per day.", font = attrs["norm_font"])
 		self.light_cycle = ttk.Entry(master = self.layer2_frame)
-		self.enter_button = ttk.Button(master = self.layer2_frame, text = "Enter Hours", command = lambda : new_light_control("GUI", self))
+		self.enter_button = ttk.Button(master = self.layer2_frame, text = "Enter Hours", command = lambda : new_light_control(self))
 		
 		#packing lower layer
 		self.manual_pic_button.pack(side = 'left', padx = 25, pady = 5)
@@ -316,8 +316,8 @@ class GUI:
 		self.layer2_frame.pack(padx = 5, pady = 5)
 		self.window.after(int(attrs["interval_in_milliseconds"]), lambda : repeater(self))
 		self.window.mainloop()
-	def image_update(self,attrs,camera):
-		cameraCapture(camera)
+	def image_update(self,attrs):
+		cameraCapture()
 		img = ImageTk.PhotoImage(Image.open(lastFileName()))
 		self.image_label.configure(image=img) 
 		self.image_label.image = img
@@ -331,6 +331,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
