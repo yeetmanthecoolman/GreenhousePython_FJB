@@ -146,7 +146,7 @@ def light():
 	global attrs
 	global timeoff
 	observer = Observer(float(attrs["latitude"]),float(attrs["longitude"]),float(attrs["elevation"]))
-	theSun = sun.daylight(observer)
+	theSun = sun(observer)
 	light_on = False
 	if (datetime.now(timezone.utc) > theSun["sunset"]):
 		timeoff = theSun["sunrise"] + timedelta(hours=float(attrs["light_length"]))
@@ -330,6 +330,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
