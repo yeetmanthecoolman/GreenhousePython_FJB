@@ -59,7 +59,7 @@ from datetime import timedelta, timezone
 from astral import sun, Observer
 
 # Postinitialization
-
+timeoff = datetime.now(timezone.utc)
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
 # create the cs (chip select)
@@ -137,15 +137,9 @@ def water(input : float = None):
 def repeater(output):
 	global attrs
 	global mode
-	current_time = datetime.datetime.now(timezone.utc) - timedelta(hours=5)#add variable timezone, this is stuck on UTC-5
-	four_pm = datetime.datetime(datetime.datetime.today().year, datetime.datetime.today().month, datetime.datetime.today().day) + timedelta(hours=16)#This is the least efficient way to do this
-	#print(current_time.time())
-	#print(four_pm.time())
-	#print(current_time.time() > four_pm.time())
-	if (current_time.time() > four_pm.time()) or True:#hacks for days
-		light()
-		water()
-		cameraCapture()
+	light()
+	water()
+	cameraCapture()
 	output.bzone1.config(text = "Left Bed: " + str(get_data(0)))
 	output.bzone2.config(text = "Middle Bed: " + str(get_data(1)))
 	output.bzone3.config(text = "Right Bed: " + str(get_data(2)))
@@ -154,22 +148,14 @@ def repeater(output):
 @app.command()
 def light(): 
 	global attrs
+	global timeoff
 	observer = Observer(float(attrs["latitude"]),float(attrs["Longitude"]),float(attrs["elevation"]))
-	mcpasd = datetime.datetime.now(timezone.utc)
-	# Get today's sunrise and sunset in CST
-	today_sr = theSun.get_sunrise_time() + timedelta(hours=7)
-	today_ss = theSun.get_sunset_time() + timedelta(hours=7)
-	if today_sr > mcpasd:
-		today_sr = today_sr - timedelta(days=1)
-	if today_sr > today_ss:
-		today_ss = today_ss + timedelta(days=1)
-	today_suntime = today_ss - today_sr
-	light_on_time = today_suntime - today_suntime + timedelta(hours = int(attrs["light_length"]))
-	today_suntime = mcpasd - today_sr
-	if(mcpasd.time() > today_ss.time() and today_suntime < light_on_time):
+	srss = sun.daylight(observer)
+	light_on = False
+	if (datetime.now(timezone.utc) > ssrs[1]):
+		timeOff = datetime.now(timezone.utc) + timedelta(hours=float(attrs["light_length"]))
+	if (datetime.now(timezone.utc) < timeoff):
 		light_on = True
-	else:
-		light_on = False
 	GPIO.output(int(attrs["lightPin"]), light_on)
 
 #input camera attributes and capture image, updates attributes and returns new attributes
@@ -350,6 +336,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
