@@ -146,11 +146,11 @@ def repeater(output):
 def light(): 
 	global attrs
 	global timeoff
-	observer = Observer(float(attrs["latitude"]),float(attrs["Longitude"]),float(attrs["elevation"]))
-	srss = sun.daylight(observer)
+	observer = Observer(float(attrs["latitude"]),float(attrs["longitude"]),float(attrs["elevation"]))
+	theSun = sun.daylight(observer)
 	light_on = False
-	if (datetime.now(timezone.utc) > ssrs[1]):
-		timeoff = ssrs[0] + timedelta(hours=float(attrs["light_length"]))
+	if (datetime.now(timezone.utc) > theSun["sunset"]):
+		timeoff = theSun["sunrise"] + timedelta(hours=float(attrs["light_length"]))
 	if (datetime.now(timezone.utc) < timeoff):
 		light_on = True
 	GPIO.output(int(attrs["lightPin"]), light_on)
@@ -331,6 +331,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
