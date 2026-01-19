@@ -125,7 +125,7 @@ def water(input : float = None):
 		moisture = get_data(x)
 		if (attrs["bed" + str(x)] == "True") and (int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter"]) - float(attrs["deadband"])) < moisture):
 			GPIO.output(int(attrs["waterPin"]), GPIO.HIGH)#replace with whatever turns on bed x
-			attrs["bed" + str(x)] = "False"
+			attrs["bed" + str(x)] = "True"
 			setAttributes()
 		elif (attrs["bed" + str(x)] == "False") and (int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter"]) + float(attrs["deadband"])) > moisture):
 			GPIO.output(int(attrs["waterPin"]), GPIO.LOW)#replace with whatever turns off bed x
@@ -331,6 +331,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
