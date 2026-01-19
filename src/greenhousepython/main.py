@@ -97,7 +97,7 @@ def new_light_control(output = None):
 	light_cycle = output.light_cycle
 	new_light_length = light_cycle.get()
 	light_cycle.delete(0, len(new_light_length))
-	if(new_light_length != ""):
+	if (new_light_length != ""):
 		try:
 			if(int(new_light_length) <= 24):
 				attrs["light_length"] = new_light_length
@@ -160,7 +160,7 @@ def light():
 
 #input camera attributes and capture image, updates attributes and returns new attributes
 @app.command()
-def cameraCapture():#update to support new attr system, and to not badly reimplement last_file_name
+def cameraCapture():#update to not badly reimplement last_file_name
 	global theCamera
 	global attrs
 	if attrs["use_camera"] == "False":
@@ -212,13 +212,7 @@ def see_data():#Expand on me
 
 def get_data(num):
 	num = int(num)
-	return(chan_list[num].value)
-
-def compare(num):
-	for x in chan_list:
-		if(num > 1.2 * x.value or num < 0.8 * x.value):
-			return False
-	return True
+	return chan_list[num].value
 	
 # GUI ****************************************************************************************	
 
@@ -227,7 +221,7 @@ class GUI:
 		# window
 		self.window = tk.Tk()
 		self.window.title =('Greenhouse')
-		self.window.geometry(attrs["resolution"])#This needs to be changed
+		self.window.geometry(attrs["resolution"])
 		
 		# title
 		self.title_label = ttk.Label(master = self.window, text = 'Greenhouse', font = attrs["header_font"])
@@ -334,26 +328,3 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
