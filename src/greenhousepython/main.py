@@ -12,12 +12,10 @@ attrs = {}
 def getDataAttributes():
 	global attrs
 	cfg = open("cfg.txt", "r")
-	accumulator = {}
 	for thing in cfg.readlines():#find all things seperated by newlines
 		kvp = thing.split(":")#get key-value pairs
-		accumulator[kvp[0]] = kvp[1].rstrip("\n")#add key-value pair to dictionary, no random trailing newline for you
+		attrs[kvp[0]] = kvp[1].rstrip("\n")#add key-value pair to dictionary, no random trailing newline for you
 	cfg.close()
-	attrs = accumulator
 
 #rewrite the list with updated values
 def setAttributes():
@@ -325,6 +323,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
