@@ -7,6 +7,7 @@ All versions of this software are currently a work in progress, and no security 
 | Version | Supported          |
 | ------- | ------------------ |
 | 0.0.x   | :x:                |
+| 0.1.x   | :x:                |
 
 ## Reporting a Vulnerability
 
