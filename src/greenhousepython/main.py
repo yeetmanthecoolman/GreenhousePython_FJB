@@ -271,7 +271,6 @@ class GUI:
 		self.moisture_label.pack(padx = 5, pady = 20)
 		self.slider.pack(padx = 5, pady = 5)
 		self.top_buttons.pack(padx = 5, pady = 5)
-		self.bottom_buttons.pack(padx = 5, pady = 5)
 		self.moisture_frame.pack(padx = 10, pady = 10)
 		
 		self.top_right_frame.pack(padx=10, pady=10)
@@ -315,6 +314,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
