@@ -153,7 +153,7 @@ def light():
 	srss = sun.daylight(observer)
 	light_on = False
 	if (datetime.now(timezone.utc) > ssrs[1]):
-		timeOff = datetime.now(timezone.utc) + timedelta(hours=float(attrs["light_length"]))
+		timeOff = ssrs[0] + timedelta(hours=float(attrs["light_length"]))
 	if (datetime.now(timezone.utc) < timeoff):
 		light_on = True
 	GPIO.output(int(attrs["lightPin"]), light_on)
@@ -336,6 +336,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
