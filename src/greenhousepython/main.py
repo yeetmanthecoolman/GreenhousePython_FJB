@@ -257,7 +257,7 @@ class GUI:
 		self.top_buttons = ttk.Frame(master = self.moisture_frame)
 		self.bottom_buttons = ttk.Frame(master = self.moisture_frame)
 		self.bar_state = 0.0
-		self.slider = ttk.Scale(self.top_buttons, from_=0, to=1, orient="horizontal", variable=self.bar_state, command = lambda : water(self.bar_state))
+		self.slider = ttk.Scale(self.top_buttons, from_=0, to=1, orient="horizontal", variable=self.bar_state, command = lambda event: water(self.bar_state))
 
 		
 		# far right packing
@@ -315,6 +315,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
