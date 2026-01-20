@@ -2,11 +2,13 @@
 # 
 # The main file.
 
-#pre-initialization
+#Preinitialization ****************************************************************************************
 
 from typer import Typer, Option
 app = Typer()
 attrs = {}
+
+#File IO ****************************************************************************************
 
 #read configuration information from cfg.txt and use it
 def getDataAttributes():
@@ -27,8 +29,6 @@ def setAttributes():
 		accumulator.append(key + ":" + attrs[key] + "\n")#assemble key and values into new format
 	cfg.writelines(accumulator)#append to file
 	cfg.close()
-
-
 
 # Initialization ****************************************************************************************
 
@@ -53,7 +53,7 @@ from PIL import Image, ImageTk
 from datetime import datetime, timedelta, timezone
 from astral import sun, Observer
 
-# Postinitialization
+# Postinitialization ****************************************************************************************
 timeoff = datetime.now(timezone.utc)
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
@@ -73,7 +73,7 @@ camera_cfg = theCamera.create_still_configuration()
 theCamera.start()
 
 
-# methods   ***********************************************************************************
+# CLI commands   ***********************************************************************************
 
 #a simple command to allow the user to change settings-this lets them define nonsense parameters, but I could care less, because my getdataattributes can ignore them.
 #However, this almost certainly breaks if you pass in a thing that contains a newline, which we should fix later.
@@ -139,12 +139,6 @@ def cameraCapture():#updated to not badly reimplement last_file_name
 	setAttributes()
 	return attrs
 
-def FileName(fileNumber):
-    global attrs
-    if (fileNumber == 0):
-        return "../../images/placeholder.jpg"
-    return "../../images/" + attrs["file_name_prefix"] + str(fileNumber) + ".jpg"
-
 @app.command()
 def create_video(image_paths, output_video_path : str, fps : int = 24, size : str = None):
 	if not image_paths:
@@ -179,9 +173,11 @@ def see_data():#Expand on me
 	for key in keys:
 		print(key + ":" + attrs[key])#assemble key and values into new format
 
-def get_data(num):
-	num = int(num)
-	return chan_list[num].value
+#A quick little command that just starts the GUI.
+@app.command()
+def start_gui():
+	global attrs
+	gui = GUI(attrs)
 	
 # GUI ****************************************************************************************	
 
@@ -310,35 +306,16 @@ class GUI:
 		self.capture_label.config(text = text = "There have been" + attrs["last_file_number"] + "captures\nsince last time-lapse.")
 		self.window.after(int(attrs["interval_in_milliseconds"]), lambda : self.repeater())
 
-#A quick little command that just starts the GUI.
-@app.command()
-def start_gui():
-	global attrs
-	gui = GUI(attrs)
+# helpers ****************************************************************************************
+def get_data(num):
+	num = int(num)
+	return chan_list[num].value
+
+def FileName(fileNumber):
+    global attrs
+    if (fileNumber == 0):
+        return "../../images/placeholder.jpg"
+    return "../../images/" + attrs["file_name_prefix"] + str(fileNumber) + ".jpg"
 	
 # Finalization and execution ****************************************************************************************
 app()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
