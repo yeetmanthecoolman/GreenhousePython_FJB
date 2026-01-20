@@ -155,6 +155,10 @@ def light():
 		print("We think that it's before sunset.")
 	if (datetime.now(timezone.utc) < timeoff):
 		light_on = True
+		if attrs["is_debug"] == "True":
+			print("The light should be on.")
+	elif attrs["is_debug"] == "True":
+		print("The light should be off.")
 	GPIO.output(int(attrs["lightPin"]), light_on)
 
 #input camera attributes and capture image, updates attributes and returns new attributes
@@ -315,6 +319,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
