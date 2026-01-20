@@ -8,7 +8,7 @@ from typer import Typer, Option
 app = Typer()
 attrs = {}
 
-#File IO ****************************************************************************************
+#Helpers ****************************************************************************************
 
 #read configuration information from cfg.txt and use it
 def getDataAttributes():
@@ -29,6 +29,12 @@ def setAttributes():
 		accumulator.append(key + ":" + attrs[key] + "\n")#assemble key and values into new format
 	cfg.writelines(accumulator)#append to file
 	cfg.close()
+
+def FileName(fileNumber):
+    global attrs
+    if (fileNumber == 0):
+        return "../../images/placeholder.jpg"
+    return "../../images/" + attrs["file_name_prefix"] + str(fileNumber) + ".jpg"
 
 # Initialization ****************************************************************************************
 
@@ -87,6 +93,7 @@ def change_setting(key : str, value : str):
 @app.command()
 def water(input : float = None):
 	global attrs
+	global chan_list
 	if input != None:
 		attrs["control_parameter"] = str(input)
 		setAttributes()
@@ -94,7 +101,7 @@ def water(input : float = None):
 		print("The system says your input is None, BTW")
 	moisture = 0
 	for x in range(int(attrs["beds"])):
-		moisture = get_data(x)
+		moisture = chan_list[x].value
 		if (attrs["bed" + str(x)] == "False") and (moisture < int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter"]) - (float(attrs["deadband"])/2))):
 			GPIO.output(int(attrs["waterPin"]), GPIO.HIGH)#replace with whatever turns on bed x
 			attrs["bed" + str(x)] = "True"
@@ -184,6 +191,7 @@ def start_gui():
 class GUI:
 	def __init__(self):#fix attribute handling in here
 		global attrs
+		global chan_list
 		
 		# window
 		self.window = tk.Tk()
@@ -220,9 +228,9 @@ class GUI:
 		self.last_capture = ttk.Label(master = self.top_right_frame, text = 'Last capture was taken ___ minutes ago.', font = attrs["norm_font"])
 		self.zone_frame = ttk.Frame(master = self.top_right_frame)
 		self.zone_label = ttk.Label(master = self.zone_frame, text = "Zone Moistures", font = attrs["norm_font"])
-		self.bzone1 = ttk.Button(master = self.zone_frame, text = "Left Bed: " + str(get_data(0)))#These only update once
-		self.bzone2 = ttk.Button(master = self.zone_frame, text = "Middle Bed: " + str(get_data(1)))
-		self.bzone3 = ttk.Button(master = self.zone_frame, text = "Right Bed: " + str(get_data(2)))
+		self.bzone1 = ttk.Button(master = self.zone_frame, text = "Left Bed: " + str(chan_list[0].value))
+		self.bzone2 = ttk.Button(master = self.zone_frame, text = "Middle Bed: " + str(chan_list[1].value))
+		self.bzone3 = ttk.Button(master = self.zone_frame, text = "Right Bed: " + str(chan_list[2].value))
 
 		self.moisture_frame = ttk.Frame(master = self.top_right_frame)
 		self.moisture_label = ttk.Label(master = self.moisture_frame, text = "Select Moisture Level", font = attrs["norm_font"])
@@ -297,28 +305,20 @@ class GUI:
 				self.light_label.config(text = "Nope. That's not a number of hours the selected\ngrowlight can remain on.\nStill " + attrs["light_length"] + " hours per day.")
 	def repeater():
 		global attrs
+		global chan_list
 		light()#check lights
 		water()#update beds
 		cameraCapture()#capture image
 		#update GUI
-		self.bzone1.config(text = "Left Bed: " + str(get_data(0)))
-		self.bzone2.config(text = "Middle Bed: " + str(get_data(1)))
-		self.bzone3.config(text = "Right Bed: " + str(get_data(2)))
+		self.bzone1.config(text = "Left Bed: " + str(chan_list[0].value))
+		self.bzone2.config(text = "Middle Bed: " + str(chan_list[1].value))
+		self.bzone3.config(text = "Right Bed: " + str(chan_list[2].value))
 		self.interval_label.config(text = 'Interval is set to ' + attrs["interval_in_milliseconds"] + "milliseconds.")
 		self.capture_label.config(text = text = "There have been" + attrs["last_file_number"] + "captures\nsince last time-lapse.")
 		self.window.after(int(attrs["interval_in_milliseconds"]), lambda : self.repeater())
 
-# helpers ****************************************************************************************
-def get_data(num):
-	num = int(num)
-	return chan_list[num].value
-
-def FileName(fileNumber):
-    global attrs
-    if (fileNumber == 0):
-        return "../../images/placeholder.jpg"
-    return "../../images/" + attrs["file_name_prefix"] + str(fileNumber) + ".jpg"
 	
 # Finalization and execution ****************************************************************************************
 app()
+
 
