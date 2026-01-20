@@ -96,10 +96,12 @@ def new_light_control(output = None):
 	light_cycle.delete(0, len(new_light_length))
 	if (new_light_length != ""):
 		try:
-			if(float(new_light_length) <= 24):
-				attrs["light_length"] = new_light_length
-			else:
+			if(float(new_light_length) > 24):
 				attrs["light_length"] = "24"
+			elif (float(new_light_length) < 0):
+				attrs["light_length"]  = "0"
+			else:
+				attrs["light_length"] = new_light_length
 			print(attrs["light_length"])
 			setAttributes()
 			output.light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + attrs["light_length"] + " hours per day.")
@@ -313,6 +315,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
