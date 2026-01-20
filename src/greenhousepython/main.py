@@ -137,6 +137,8 @@ def repeater(output):
 	output.bzone1.config(text = "Left Bed: " + str(get_data(0)))
 	output.bzone2.config(text = "Middle Bed: " + str(get_data(1)))
 	output.bzone3.config(text = "Right Bed: " + str(get_data(2)))
+	output.interval_label.config(text = 'Interval is set to ' + attrs["interval_in_milliseconds"] + "milliseconds.")
+	output.capture_label.config(text = text = "There have been" + attrs["last_file_number"] + "captures\nsince last time-lapse.")
 	output.window.after(int(attrs["interval_in_milliseconds"]), lambda : repeater(output))
 
 @app.command()
@@ -240,8 +242,8 @@ class GUI:
 		self.image_label = ttk.Label(master = self.image_frame, image = self.last_plant_image)
 		
 		self.image_label_frame = ttk.Frame(master = self.image_frame)
-		self.interval_label = ttk.Label(master = self.image_label_frame, text = 'Interval is set to ', font = attrs["norm_font"])
-		self.capture_label = ttk.Label(master = self.image_label_frame, text = 'There have been __ captures\nsince last time-lapse.', font = attrs["norm_font"])
+		self.interval_label = ttk.Label(master = self.image_label_frame, text = 'Interval is set to ' + attrs["interval_in_milliseconds"] + "milliseconds.", font = attrs["norm_font"])
+		self.capture_label = ttk.Label(master = self.image_label_frame, text = "There have been" + attrs["last_file_number"] + "captures\nsince last time-lapse.", font = attrs["norm_font"])
 		
 		# packing image stuff
 		self.image_label.pack(side = 'left', padx = 10, pady = 10)
@@ -320,6 +322,7 @@ def start_gui():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
