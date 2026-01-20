@@ -177,12 +177,14 @@ def see_data():#Expand on me
 @app.command()
 def start_gui():
 	global attrs
-	gui = GUI(attrs)
+	gui = GUI()
 	
 # GUI ****************************************************************************************	
 
 class GUI:
-	def __init__(self,attrs):#fix attribute handling in here
+	def __init__(self):#fix attribute handling in here
+		global attrs
+		
 		# window
 		self.window = tk.Tk()
 		self.window.title =('Greenhouse')
@@ -319,3 +321,4 @@ def FileName(fileNumber):
 	
 # Finalization and execution ****************************************************************************************
 app()
+
