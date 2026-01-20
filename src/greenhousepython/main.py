@@ -261,7 +261,7 @@ class GUI:
 		# captures picture, command= cameraCapture
 		# ISSUE: taking picture on boot
 		#I disagree, that's a feature!
-		self.manual_pic_button = ttk.Button(master = self.layer2_frame, text = "Take Manual\nPicture", command = lambda : self.image_update(attrs))
+		self.manual_pic_button = ttk.Button(master = self.layer2_frame, text = "Take Manual\nPicture", command = lambda : self.image_update())
 		
 		# should start recording function
 		self.start_record = ttk.Button(master = self.layer2_frame, text = attrs["recording_status"])
@@ -279,13 +279,14 @@ class GUI:
 		self.window.after(int(attrs["interval_in_milliseconds"]), lambda : self.repeater())
 		self.window.mainloop()
 	#update the image
-	def image_update(self,attrs):
+	def image_update(self):
+		global attrs
 		cameraCapture()
 		img = ImageTk.PhotoImage(Image.open(FileName(int(attrs["last_file_number"]))))
 		self.image_label.configure(image=img) 
 		self.image_label.image = img
 	# Set light_length to the stored input value
-	def new_light_control():
+	def new_light_control(self):
 		global attrs
 		new_light_length = self.light_cycle.get()#get user input
 		self.light_cycle.delete(0, len(new_light_length))#clear input field
@@ -303,7 +304,7 @@ class GUI:
 				self.light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + attrs["light_length"] + " hours per day.")
 			except ValueError as e:
 				self.light_label.config(text = "Nope. That's not a number of hours the selected\ngrowlight can remain on.\nStill " + attrs["light_length"] + " hours per day.")
-	def repeater():
+	def repeater(self):
 		global attrs
 		global chan_list
 		light()#check lights
@@ -320,6 +321,7 @@ class GUI:
 	
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
