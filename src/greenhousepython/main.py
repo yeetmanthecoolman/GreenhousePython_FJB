@@ -176,6 +176,9 @@ def see_data():#Expand on me
 	print('Chan 1 ADC Voltage: ' + str(chan1.voltage) + 'V')
 	print('Chan 2 Raw ADC Value: ', chan2.value)
 	print('Chan 2 ADC Voltage: ' + str(chan2.voltage) + 'V')
+	keys = attrs.keys()#get all the settings
+	for key in keys:
+		print(key + ":" + attrs[key])#assemble key and values into new format
 
 def get_data(num):
 	num = int(num)
@@ -316,6 +319,7 @@ def start_gui():
 	
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
