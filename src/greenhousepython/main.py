@@ -83,31 +83,6 @@ def change_setting(key : str, value : str):
 	attrs[key] = value
 	setAttributes()
 
-# new_light_control
-# 
-# Get user input and store it
-# Clear the input
-# Set light_length to the stored input value
-
-def new_light_control(output = None):
-	global attrs
-	light_cycle = output.light_cycle
-	new_light_length = light_cycle.get()
-	light_cycle.delete(0, len(new_light_length))
-	if (new_light_length != ""):
-		try:
-			if(float(new_light_length) > 24):
-				attrs["light_length"] = "24"
-			elif (float(new_light_length) < 0):
-				attrs["light_length"]  = "0"
-			else:
-				attrs["light_length"] = new_light_length
-			print(attrs["light_length"])
-			setAttributes()
-			output.light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + attrs["light_length"] + " hours per day.")
-		except ValueError as e:
-			output.light_label.config(text = "Nope. That's not a number of hours the selected\ngrowlight can remain on.\nStill " + attrs["light_length"] + " hours per day.")
-
 #control pumps using hysteresis based on the values returned from the MCP
 @app.command()
 def water(input : float = None):
@@ -128,18 +103,6 @@ def water(input : float = None):
 			GPIO.output(int(attrs["waterPin"]), GPIO.LOW)#replace with whatever turns off bed x
 			attrs["bed" + str(x)] = "False"
 			setAttributes()
-
-def repeater(output):
-	global attrs
-	light()
-	water()
-	cameraCapture()
-	output.bzone1.config(text = "Left Bed: " + str(get_data(0)))
-	output.bzone2.config(text = "Middle Bed: " + str(get_data(1)))
-	output.bzone3.config(text = "Right Bed: " + str(get_data(2)))
-	output.interval_label.config(text = 'Interval is set to ' + attrs["interval_in_milliseconds"] + "milliseconds.")
-	output.capture_label.config(text = text = "There have been" + attrs["last_file_number"] + "captures\nsince last time-lapse.")
-	output.window.after(int(attrs["interval_in_milliseconds"]), lambda : repeater(output))
 
 @app.command()
 def light(): 
@@ -296,7 +259,7 @@ class GUI:
 		self.start_record = ttk.Button(master = self.layer2_frame, text = attrs["recording_status"])
 		self.light_label = ttk.Label(master = self.layer2_frame, text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + attrs["light_length"] + " hours per day.", font = attrs["norm_font"])
 		self.light_cycle = ttk.Entry(master = self.layer2_frame)
-		self.enter_button = ttk.Button(master = self.layer2_frame, text = "Enter Hours", command = lambda : new_light_control(self))
+		self.enter_button = ttk.Button(master = self.layer2_frame, text = "Enter Hours", command = lambda : self.new_light_control())
 		
 		#packing lower layer
 		self.manual_pic_button.pack(side = 'left', padx = 25, pady = 5)
@@ -305,13 +268,45 @@ class GUI:
 		self.light_cycle.pack(padx = 25, pady = 5)
 		self.enter_button.pack(padx = 25, pady = 5)
 		self.layer2_frame.pack(padx = 5, pady = 5)
-		self.window.after(int(attrs["interval_in_milliseconds"]), lambda : repeater(self))
+		self.window.after(int(attrs["interval_in_milliseconds"]), lambda : self.repeater())
 		self.window.mainloop()
+	#update the image
 	def image_update(self,attrs):
 		cameraCapture()
 		img = ImageTk.PhotoImage(Image.open(lastFileName()))
 		self.image_label.configure(image=img) 
 		self.image_label.image = img
+	# Set light_length to the stored input value
+	def new_light_control():
+		global attrs
+		new_light_length = self.light_cycle.get()#get user input
+		self.light_cycle.delete(0, len(new_light_length))#clear input field
+		if (new_light_length != ""):#I don't fully understand why this if statement is here
+			try:#Catch-all
+				if(float(new_light_length) > 24):#No superlights for you
+					attrs["light_length"] = "24"
+				elif (float(new_light_length) < 0):#No antilights for you
+					attrs["light_length"]  = "0"
+				else:
+					attrs["light_length"] = new_light_length#set lights
+				if attrs["is_debug"] == "True":
+					print(attrs["light_length"])
+				setAttributes()
+				self.light_label.config(text = "Enter the number of hours the selected\ngrowlight should remain on.\nCurrently " + attrs["light_length"] + " hours per day.")
+			except ValueError as e:
+				self.light_label.config(text = "Nope. That's not a number of hours the selected\ngrowlight can remain on.\nStill " + attrs["light_length"] + " hours per day.")
+	def repeater():
+		global attrs
+		light()#check lights
+		water()#update beds
+		cameraCapture()#capture image
+		#update GUI
+		self.bzone1.config(text = "Left Bed: " + str(get_data(0)))
+		self.bzone2.config(text = "Middle Bed: " + str(get_data(1)))
+		self.bzone3.config(text = "Right Bed: " + str(get_data(2)))
+		self.interval_label.config(text = 'Interval is set to ' + attrs["interval_in_milliseconds"] + "milliseconds.")
+		self.capture_label.config(text = text = "There have been" + attrs["last_file_number"] + "captures\nsince last time-lapse.")
+		self.window.after(int(attrs["interval_in_milliseconds"]), lambda : self.repeater())
 
 #A quick little command that just starts the GUI.
 @app.command()
@@ -319,9 +314,9 @@ def start_gui():
 	global attrs
 	gui = GUI(attrs)
 	
-
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
