@@ -43,7 +43,7 @@ def FileName(fileNumber):
 getDataAttributes()
 try:
 	from picamera2 import Picamera2
-finally:
+except ImportError:
 	from nonsense import Picamera2
 try:
 	import RPi.GPIO as GPIO
@@ -52,7 +52,7 @@ try:
 	import board
 	import adafruit_mcp3xxx.mcp3008 as MCP
 	from adafruit_mcp3xxx.analog_in import AnalogIn
-finally:
+except ImportError:
 	from nonsense import GPIO, busio, digitalio, board, MCP, AnalogIn
 import tkinter as tk
 from tkinter import ttk
@@ -334,6 +334,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
