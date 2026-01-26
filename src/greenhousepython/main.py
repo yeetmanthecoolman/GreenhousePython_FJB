@@ -5,10 +5,8 @@
 #Preinitialization ****************************************************************************************
 
 from typer import Typer
-import pkgutil
 app = Typer()
 attrs = {}
-packages = [m.name for m in pkgutil.iter_modules()]
 
 #Helpers ****************************************************************************************
 
@@ -334,6 +332,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
