@@ -41,18 +41,18 @@ def FileName(fileNumber):
 # Initialization ****************************************************************************************
 
 getDataAttributes()
-if "picamera2" in packages:
+try:
 	from picamera2 import Picamera2
-else:
+finally:
 	from nonsense import Picamera2
-if ("RPi.GPIO" in packages) and ("busio" in packages) and ("digitalio" in packages) and ("board" in packages) and ("adafruit_mcp3xxx" in packages):
+try:
 	import RPi.GPIO as GPIO
 	import busio
 	import digitalio
 	import board
 	import adafruit_mcp3xxx.mcp3008 as MCP
 	from adafruit_mcp3xxx.analog_in import AnalogIn
-else:
+finally:
 	from nonsense import GPIO, busio, digitalio, board, MCP, AnalogIn
 import tkinter as tk
 from tkinter import ttk
@@ -334,6 +334,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
