@@ -5,8 +5,10 @@
 #Preinitialization ****************************************************************************************
 
 from typer import Typer, Option
+import pkgutil
 app = Typer()
 attrs = {}
+packages = [m.name for m in pkgutil.iter_modules()]
 
 #Helpers ****************************************************************************************
 
@@ -39,11 +41,11 @@ def FileName(fileNumber):
 # Initialization ****************************************************************************************
 
 getDataAttributes()
-if "picamera2" in [m.name for m in pkgutil.iter_modules()]:
+if "picamera2" in packages:
 	from picamera2 import Picamera2
 else:
 	from nonsense import Picamera2
-if attrs["use_gpio"] == "True":
+if ("RPi.GPIO" in packages) and ("busio" in packages) and ("digitalio" in packages) and ("board" in packages) and ("adafruit_mcp3xxx" in packages):
 	import RPi.GPIO as GPIO
 	import busio
 	import digitalio
@@ -329,6 +331,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
