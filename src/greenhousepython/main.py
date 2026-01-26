@@ -39,7 +39,7 @@ def FileName(fileNumber):
 # Initialization ****************************************************************************************
 
 getDataAttributes()
-if attrs["use_camera"] == "True":
+if "picamera2" in [m.name for m in pkgutil.iter_modules()]:
 	from picamera2 import Picamera2
 else:
 	from nonsense import Picamera2
@@ -329,6 +329,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
