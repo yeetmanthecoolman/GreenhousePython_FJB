@@ -141,14 +141,15 @@ def light():
 def cameraCapture():#updated to not badly reimplement last_file_name
 	global theCamera
 	global attrs
-	if attrs["use_camera"] == "False":
-		if attrs["is_debug"] == "True":
-			print("We won't genertate an image, actually")
+	try:
+		theCamera.capture_file(FileName(int(attrs["last_file_number"]) + 1))
+		attrs["last_file_number"] = str(int(attrs["last_file_number"]) + 1)
+		setAttributes()
 		return attrs
-	theCamera.capture_file(FileName(int(attrs["last_file_number"]) + 1))
-	attrs["last_file_number"] = str(int(attrs["last_file_number"]) + 1)
-	setAttributes()
-	return attrs
+	except Exception:
+		if attrs["is_debug"] == "True":
+			print("we failed at photography, for some reason")
+		return attrs
 
 @app.command()
 def create_video(output_video_path : str, fps : int = 24, size : str = None):#update to automatically build image_paths
@@ -332,6 +333,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
