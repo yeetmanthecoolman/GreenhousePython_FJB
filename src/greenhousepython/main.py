@@ -341,11 +341,16 @@ class GUI:
 #GTK GUI def goes here
 
 class Application(Adw.Application):
-	pass
+	def do_activate(self):
+		self.window = GTKWindow(self)
+		self.window.present()
 
 class GTKWindow(Gtk.ApplicationWindow):
-	pass
+	def __init__(self,thing):
+		super().__init__(application=thing)
+		
 
 
 # Finalization and execution ****************************************************************************************
 app()
+
