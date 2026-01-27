@@ -54,6 +54,8 @@ except ImportError:
 	from nonsense import GPIO, busio, digitalio, board, MCP, AnalogIn
 import tkinter as tk
 from tkinter import ttk
+import gi
+from gi.repository import GLib, Gtk
 import cv2
 from PIL import Image, ImageTk
 from datetime import datetime, timedelta, timezone
@@ -193,6 +195,8 @@ def see_data():#Expand on me
 def start_gui():
 	global attrs
 	gui = GUI()
+
+#GTK GUI startup command goes here
 	
 # GUI ****************************************************************************************	
 
@@ -330,9 +334,12 @@ class GUI:
 		setAttributes()
 		water()
 
+#GTK GUI def goes here
+
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
