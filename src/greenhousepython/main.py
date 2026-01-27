@@ -56,7 +56,6 @@ import tkinter as tk
 from tkinter import ttk
 import gi
 gi.require_version("Gtk", "4.0")
-gi.require_version("Adw", "1")
 from gi.repository import GLib, Gtk
 import cv2
 from PIL import Image, ImageTk
@@ -340,7 +339,11 @@ class GUI:
 
 #GTK GUI def goes here
 
-class Application(Adw.Application):
+class Application(Gtk.Application):
+	def __init__(self):
+		super().__init__()
+		self.connect("activate",do_activate)
+		self.run(None)
 	def do_activate(self):
 		self.window = GTKWindow(self)
 		self.window.present()
@@ -353,4 +356,3 @@ class GTKWindow(Gtk.ApplicationWindow):
 
 # Finalization and execution ****************************************************************************************
 app()
-
