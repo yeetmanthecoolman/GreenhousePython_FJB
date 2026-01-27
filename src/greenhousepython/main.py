@@ -198,8 +198,10 @@ def start_gui():
 	global attrs
 	gui = GUI()
 
-#GTK GUI startup command goes here
-	
+@app.command()
+def start_gtk_gui():
+	sys.exit(Application().run(sys.argv))
+
 # GUI ****************************************************************************************	
 
 class GUI:
@@ -347,24 +349,3 @@ class GTKWindow(Gtk.ApplicationWindow):
 
 # Finalization and execution ****************************************************************************************
 app()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
