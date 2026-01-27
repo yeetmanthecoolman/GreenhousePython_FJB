@@ -56,6 +56,7 @@ import tkinter as tk
 from tkinter import ttk
 import gi
 gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
 from gi.repository import GLib, Gtk
 import cv2
 from PIL import Image, ImageTk
@@ -337,14 +338,16 @@ class GUI:
 
 #GTK GUI def goes here
 
-class gtkGUI(Gtk.Application):
-	def __init__(self,*args, **kwargs):
-		super().__init__(*args, **kargs)
-		self.set_default_size("we must reimplement the GUI size control in attrs for this")
+class Application(Adw.Application):
+	pass
+
+class GTKWindow(Gtk.ApplicationWindow):
+	pass
 
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
