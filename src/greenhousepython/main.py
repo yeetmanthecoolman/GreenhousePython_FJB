@@ -338,11 +338,14 @@ class GUI:
 #GTK GUI def goes here
 
 class gtkGUI(Gtk.Application):
-	def __init__(self):
-		super().__init__()#fixme
+	def __init__(self,*args, **kwargs):
+		super().__init__(*args, **kargs)
+		self.set_default_size("we must reimplement the GUI size control in attrs for this")
+
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
