@@ -362,7 +362,7 @@ class GTKGUI():
 		for n in range(int(attrs["beds"])):
 			self.waterpages.append(Gtk.Box())
 			self.waterpages[n].append(Gtk.Label(label="This is a test of whether we can do automatic allocation"))
-			self.WaterPage.append_page(self.waterpages[n],Gtk.Label(label="Bed" + str(n))
+			self.WaterPage.append_page(self.waterpages[n],Gtk.Label(label="Bed" + str(n)))
 		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Water Control"))
 		self.LightPage = Gtk.Box()
 		self.LightPage.append(Gtk.Label(label="This is a test of whether sliders word."))
@@ -376,6 +376,7 @@ class GTKGUI():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
