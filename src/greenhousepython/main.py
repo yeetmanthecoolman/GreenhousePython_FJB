@@ -356,14 +356,15 @@ class GTKGUI(Gtk.ApplicationWindow):
 		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Water Control"))
 		self.LightPage = Gtk.Box()
 		self.LightPage.append(Gtk.Label(label="This is a test of whether the light page works."))
-		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Light Control"))
+		self.notebook.append_page(self.LightPage,Gtk.Label(label="Light Control"))
 		self.MiscPage = Gtk.Box()
 		self.MiscPage.append(Gtk.Label(label="This is a test of whether the miscellaneous page works."))
-		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Miscellaneous"))
+		self.notebook.append_page(self.MiscPage,Gtk.Label(label="Miscellaneous"))
 		sys.exit(self.app.run(sys.argv))
 	def do_activate(self):
 		self.present()
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
