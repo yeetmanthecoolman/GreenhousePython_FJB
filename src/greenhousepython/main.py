@@ -349,6 +349,7 @@ class GTKGUI():
 		self.App.run(None)
 		print("we get to a weird place")
 	def do_activate(self,useless):
+		global attrs
 		print("we get here")
 		self.window = Gtk.ApplicationWindow(application=self.App)
 		print("we can window")
@@ -358,7 +359,12 @@ class GTKGUI():
 		self.CameraPage = Gtk.Box()
 		self.CameraPage.append(Gtk.Label(label="This is a test of whether the camera page will work."))
 		self.notebook.append_page(self.CameraPage,Gtk.Label(label="Camera Control"))
-		self.WaterPage = Gtk.Box()
+		self.WaterPage = Gtk.Notebook()
+		self.waterpages = []
+		for n in range(int(attrs["beds"])):
+			self.waterpages.append(Gtk.Box())
+			self.waterpages[n].append(Gtk.Label(label="This is a test of whether we can do automatic allocation"))
+			self.WaterPage.append_page(self.waterpages[n],Gtk.Label(label="Bed" + str(n))
 		self.WaterPage.append(Gtk.Label(label="This is a test of whether the water page works."))
 		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Water Control"))
 		self.LightPage = Gtk.Box()
@@ -373,6 +379,7 @@ class GTKGUI():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
