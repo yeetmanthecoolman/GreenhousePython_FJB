@@ -365,7 +365,6 @@ class GTKGUI():
 			self.waterpages.append(Gtk.Box())
 			self.waterpages[n].append(Gtk.Label(label="This is a test of whether we can do automatic allocation"))
 			self.WaterPage.append_page(self.waterpages[n],Gtk.Label(label="Bed" + str(n))
-		self.WaterPage.append(Gtk.Label(label="This is a test of whether the water page works."))
 		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Water Control"))
 		self.LightPage = Gtk.Box()
 		self.LightPage.append(Gtk.Label(label="This is a test of whether the light page works."))
@@ -379,6 +378,7 @@ class GTKGUI():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
