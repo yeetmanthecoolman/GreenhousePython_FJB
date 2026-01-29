@@ -395,11 +395,15 @@ class GTKGUI():
 		self.HelpPage = Gtk.Box()
 		self.HelpPage.append(Gtk.Label(label="This is a test of whether buttons work."))
 		self.HelpPage.append(Gtk.Button.new_with_label("this is a button."))
-		self.notebook.append_page(self.HelpPage,Gtk.Image(icon_name="help-about"))
+		self.notebook.append_page(self.HelpPage,Gtk.Label(label="Help"))
+		self.SettingsPage = Gtk.Box()
+		self.SettingsPage.append(Gtk.Label(label="This is a test of whether buttons work."))
+		self.SettingsPage.append_page(self.HelpPage,Gtk.Label(label="Settigs"))
 		self.window.present()
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
