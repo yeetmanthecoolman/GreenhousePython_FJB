@@ -2,13 +2,14 @@ last_file_number:0
 interval_in_milliseconds:1000
 file_name_prefix:gi
 norm_font:Calibri 18
-light_length:16
+lights:1
+light_length0:16
 header_font:Calibri 50 bold
 resolution:1920x1080
 latitude:43.0972
 longitude:-89.5043
 elevation:0.0
-lightPin:21
+lightPin0:21
 pumpPin:15
 waterPin0:16
 waterPin1:17
