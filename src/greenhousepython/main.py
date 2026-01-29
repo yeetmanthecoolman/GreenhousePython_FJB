@@ -408,15 +408,22 @@ class GTKGUI():
 		self.SettingsPage.append(Gtk.Label(label="This is a test of whether buttons work."))
 		self.SettingsPage.append_page(self.HelpPage,Gtk.Label(label="Settigs"))
 		self.window.present()
+		self.tasks.append(self.loop.create_task(self.autocontrol()))
 	def doUpdateWaterControl(self,n,value):
 		global attrs
 		attrs["control_parameter" + str(n)] = str(value)
+		setAttributes()
 	def doUpdateDeadband(self,n,value):
 		global attrs
 		attrs["deadband" + str(n)] = str(value)
+		setAttributes()
+	async def autocontrol(self):
+		pass
+		
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
