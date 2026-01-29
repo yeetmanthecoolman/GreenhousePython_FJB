@@ -364,12 +364,18 @@ class GTKGUI():
 			self.waterpages[n].append(Gtk.Label(label="This is a test of whether we can do automatic allocation"))
 			self.WaterPage.append_page(self.waterpages[n],Gtk.Label(label="Bed" + str(n)))
 		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Water Control"))
-		self.LightPage = Gtk.Box()
-		self.LightPage.append(Gtk.Label(label="This is a test of whether sliders work."))
-		self.LightScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01)
-		self.LightScale.set_hexpand(True)
-		self.LightScale.set_vexpand(True)
-		self.LightPage.append(self.LightScale)
+		self.LightPage = Gtk.Notebook()
+		self.lightpages = []
+		self.lightscales = []
+		for n in range(int(attrs["lights"])):
+			self.lightpages.append(Gtk.Box())
+			self.lightpages[n].append(Gtk.Label(label="This is a test of the light control interface."))
+			self.lightpages[n].append(Gtk.Label(label="This will eventually display an indicator of if the light is running and a slider to control hours."))
+			self.lightscales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
+			self.lightscales[n].set_hexpand(True)
+			self.lightscales[n].set_vexpand(True)
+			self.lightpages[n].append(self.lightscales[n])
+			self.LightPage.append_page(self.waterpages[n],Gtk.Label(label="Bed" + str(n)))
 		self.notebook.append_page(self.LightPage,Gtk.Label(label="Light Control"))
 		self.MiscPage = Gtk.Box()
 		self.MiscPage.append(Gtk.Label(label="This is a test of whether buttons work."))
@@ -379,6 +385,7 @@ class GTKGUI():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
