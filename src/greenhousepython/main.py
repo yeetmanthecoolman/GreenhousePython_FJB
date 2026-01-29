@@ -366,7 +366,10 @@ class GTKGUI():
 		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Water Control"))
 		self.LightPage = Gtk.Box()
 		self.LightPage.append(Gtk.Label(label="This is a test of whether sliders work."))
-		self.LightPage.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01).set_hexpand(True).set_vexpand(True))
+		self.LightScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01)
+		self.LightScale.set_hexpand(True)
+		self.LightScale.set_vexpand(True)
+		self.LightPage.append(self.LightScale)
 		self.notebook.append_page(self.LightPage,Gtk.Label(label="Light Control"))
 		self.MiscPage = Gtk.Box()
 		self.MiscPage.append(Gtk.Label(label="This is a test of whether buttons work."))
@@ -376,6 +379,7 @@ class GTKGUI():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
