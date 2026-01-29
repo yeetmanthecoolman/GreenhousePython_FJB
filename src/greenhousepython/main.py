@@ -400,7 +400,7 @@ class GTKGUI():
 			self.lightscales[n].set_hexpand(True)
 			self.lightscales[n].set_vexpand(True)
 			self.lightpages[n].append(self.lightscales[n])
-			self.LightPage.append_page(self.waterpages[n],Gtk.Label(label="Bed" + str(n)))
+			self.LightPage.append_page(self.lightpages[n],Gtk.Label(label="Bed" + str(n)))
 		self.notebook.append_page(self.LightPage,Gtk.Label(label="Light Control"))
 		self.HelpPage = Gtk.Box()
 		self.HelpPage.append(Gtk.Label(label="This is a test of whether buttons work."))
@@ -440,6 +440,7 @@ class GTKGUI():
 		cameraCapture()
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
