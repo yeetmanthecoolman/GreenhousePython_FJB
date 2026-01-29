@@ -58,6 +58,8 @@ from tkinter import ttk
 import gi
 gi.require_version("Gtk", "4.0")
 from gi.repository import GLib, Gtk
+import asyncio
+from gi.events import GLibEventLoopPolicy
 import cv2
 from PIL import Image, ImageTk
 from datetime import datetime, timedelta, timezone
@@ -347,6 +349,8 @@ class GUI:
 
 class GTKGUI():
 	def __init__(self):
+		self.Policy = GLibEventLoopPolicy()
+		asyncio.set_event_loop_policy(self.Policy)
 		self.App = Gtk.Application(application_id="com.github.sp29174.GreenhousePython")
 		print("we have super")
 		self.App.connect("activate",self.do_activate)
@@ -411,6 +415,7 @@ class GTKGUI():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
