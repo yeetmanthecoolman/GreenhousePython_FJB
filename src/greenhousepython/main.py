@@ -392,14 +392,15 @@ class GTKGUI():
 			self.lightpages[n].append(self.lightscales[n])
 			self.LightPage.append_page(self.waterpages[n],Gtk.Label(label="Bed" + str(n)))
 		self.notebook.append_page(self.LightPage,Gtk.Label(label="Light Control"))
-		self.MiscPage = Gtk.Box()
-		self.MiscPage.append(Gtk.Label(label="This is a test of whether buttons work."))
-		self.MiscPage.append(Gtk.Button.new_with_label("this is a button."))
-		self.notebook.append_page(self.MiscPage,Gtk.Label(label="Miscellaneous"))
+		self.HelpPage = Gtk.Box()
+		self.HelpPage.append(Gtk.Label(label="This is a test of whether buttons work."))
+		self.HelpPage.append(Gtk.Button.new_with_label("this is a button."))
+		self.notebook.append_page(self.HelpPage,Gtk.Image(icon_name="help-about"))
 		self.window.present()
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
