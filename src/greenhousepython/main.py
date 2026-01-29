@@ -351,6 +351,8 @@ class GTKGUI():
 	def __init__(self):
 		self.Policy = GLibEventLoopPolicy()
 		asyncio.set_event_loop_policy(self.Policy)
+		self.loop = self.Policy.get_event_loop()
+		self.tasks = []
 		self.App = Gtk.Application(application_id="com.github.sp29174.GreenhousePython")
 		print("we have super")
 		self.App.connect("activate",self.do_activate)
@@ -415,6 +417,7 @@ class GTKGUI():
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
