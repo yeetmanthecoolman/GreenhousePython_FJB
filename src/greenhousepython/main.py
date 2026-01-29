@@ -80,10 +80,11 @@ chan1 = AnalogIn(mcp, MCP.P1)
 chan2 = AnalogIn(mcp, MCP.P2)
 chan_list = [chan0, chan1, chan2]
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(int(attrs["pumpPin"]), GPIO.OUT)
+for x in range(int(attrs["lights"])):
+	GPIO.setup(int(attrs["lightPin" + str(x)]), GPIO.OUT)
 for x in range(int(attrs["beds"])):
-	GPIO.setup(int(attrs["waterPin"+str(x)]), GPIO.OUT)
-GPIO.setup(int(attrs["lightPin"]), GPIO.OUT)
+	GPIO.setup(int(attrs["waterPin" + str(x)]), GPIO.OUT)
+GPIO.setup(int(attrs["pumpPin"]), GPIO.OUT)
 theCamera = Picamera2()
 camera_cfg = theCamera.create_still_configuration()
 theCamera.start()
@@ -439,6 +440,7 @@ class GTKGUI():
 		cameraCapture()
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
