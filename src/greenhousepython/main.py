@@ -282,19 +282,13 @@ class GUI:
 		setAttributes()
 	async def autocontrol(self):
 		global attrs
-		await self.loop.create_task(self.watercontrol())
-		await self.loop.create_task(self.lightcontrol())
-		await self.loop.create_task(self.cameracontrol())
-		self.is_safe = True
-		await asyncio.sleep(int(attrs["interval_in_milliseconds"])/1000)
-		self.is_safe = False
-		await self.loop.create_task(self.autocontrol())
-	async def watercontrol(self):
-		water()
-	async def lightcontrol(self):
-		light()
-	async def cameracontrol(self):
-		cameraCapture()
+		while True:
+			water()
+			light()
+			cameraCapture()
+			self.is_safe = True
+			await asyncio.sleep(int(attrs["interval"]))
+			self.is_safe = False
 	def test(self,*args):
 		for thing in *args:
 			print(str(thing))
@@ -303,4 +297,3 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
-
