@@ -385,7 +385,7 @@ class GTKGUI():
 			self.deadbandscales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
 			self.deadbandscales[n].set_hexpand(True)
 			self.deadbandscales[n].set_vexpand(True)
-			self.waterscales[n].connect("value-changed" , lambda scroll , value : self.doUpdateDeadband(n,value))
+			self.deadbandscales[n].connect("value-changed" , lambda scroll , value : self.doUpdateDeadband(n,value))
 			self.waterpages[n].set_end_widget(self.deadbandscales[n])
 			self.WaterPage.append_page(self.waterpages[n],Gtk.Label(label="Bed " + str(n)))
 		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Water Control"))
@@ -429,7 +429,7 @@ class GTKGUI():
 		await self.loop.create_task(self.lightcontrol())
 		await self.loop.create_task(self.cameracontrol())
 		self.is_safe = True
-		await asyncio.sleep()
+		await asyncio.sleep(int(attrs["interval_in_milliseconds"])/1000)
 		self.is_safe = False
 		await self.loop.create_task(self.autocontrol())
 	async def watercontrol(self):
@@ -440,6 +440,7 @@ class GTKGUI():
 		cameraCapture()
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
