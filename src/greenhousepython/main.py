@@ -380,12 +380,12 @@ class GTKGUI():
 			self.waterscales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
 			self.waterscales[n].set_hexpand(True)
 			self.waterscales[n].set_vexpand(True)
-			self.waterscales[n].connect("value-changed" , lambda scroll , value : self.doUpdateWaterControl(n,value))
+			self.waterscales[n].connect("value-changed" , self.test)
 			self.waterpages[n].set_center_widget(self.waterscales[n])
 			self.deadbandscales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
 			self.deadbandscales[n].set_hexpand(True)
 			self.deadbandscales[n].set_vexpand(True)
-			self.deadbandscales[n].connect("value-changed" , lambda scroll , value : self.doUpdateDeadband(n,value))
+			self.deadbandscales[n].connect("value-changed" , self.test)
 			self.waterpages[n].set_end_widget(self.deadbandscales[n])
 			self.WaterPage.append_page(self.waterpages[n],Gtk.Label(label="Bed " + str(n)))
 		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Water Control"))
@@ -438,8 +438,13 @@ class GTKGUI():
 		light()
 	async def cameracontrol(self):
 		cameraCapture()
+	def test(self,*args):
+		for thing in *args:
+			print(str(thing))
+		print("\n")
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
