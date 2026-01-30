@@ -1,11 +1,8 @@
 last_file_number:0
 interval:1
 file_name_prefix:gi
-norm_font:Calibri 18
 lights:1
 light_length0:16
-header_font:Calibri 50 bold
-resolution:1920x1080
 latitude:43.0972
 longitude:-89.5043
 elevation:0.0
@@ -14,7 +11,7 @@ pumpPin:15
 waterPin0:16
 waterPin1:17
 waterPin2:18
-MAX_VALUE:1024
+MAX_VALUE:65536
 is_debug:True
 recording_status:not dead
 beds:3
