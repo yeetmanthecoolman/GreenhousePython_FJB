@@ -59,6 +59,7 @@ from gi.repository import GLib, Gtk
 import asyncio
 from gi.events import GLibEventLoopPolicy
 import cv2
+from PIL import Image
 from datetime import datetime, timedelta, timezone
 from astral import sun, Observer
 
@@ -296,5 +297,6 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
