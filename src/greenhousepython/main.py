@@ -207,7 +207,7 @@ def start_gui():
 
 class GUI:
 	def __init__(self):
-		self.is_safe = False
+		self.lock = asyncio.Lock()
 		self.Policy = GLibEventLoopPolicy()
 		asyncio.set_event_loop_policy(self.Policy)
 		self.loop = self.Policy.get_event_loop()
@@ -270,33 +270,28 @@ class GUI:
 		self.tasks.append(self.loop.create_task(self.autocontrol()))
 	def doUpdateWaterControl(self,n,value):
 		global attrs
-		await self.become_safe()
-		self.is_safe = False
+		await self.lock.acquire()
 		attrs["control_parameter" + str(n)] = str(value)
 		setAttributes()
-		self.is_safe = True
+		self.lock.release()
 	def doUpdateDeadband(self,n,value):
 		global attrs
-		await self.become_safe()
-		self.is_safe = False
+		await self.lock.acquire()
 		attrs["deadband" + str(n)] = str(value)
 		setAttributes()
-		self.is_safe = True
+		self.lock.release()
 	async def autocontrol(self):
 		global attrs
 		while True:
+			await self.lock.acquire()
 			water()
 			light()
 			cameraCapture()
-			self.is_safe = True
+			self.lock.release()
 			await asyncio.sleep(float(attrs["interval"]))
-			self.is_safe = False
-	async def become_safe(self):
-		while not self.is_safe:
-			print("In 1968, 8% of the entire U.S. GNP was spent by the federal governmnent on intragovernment transactions.")
-		return None
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
