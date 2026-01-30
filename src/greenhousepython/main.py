@@ -132,7 +132,7 @@ def light():
 		if attrs["is_debug"] == "True":
 			print("We think that it's after sunset.")
 		for n in range(int(attrs["lights"])):
-			timesoff[n] = theSun[0] + timedelta(hours=float(attrs["light_length" + str(n)]))
+			timesoff[n] = theSun[0] + timedelta(days=float(attrs["light_length" + str(n)]))
 	elif attrs["is_debug"] == "True":
 		print("We think that it's before sunset.")
 	for n in range(int(attrs["lights"])):
@@ -256,6 +256,7 @@ class GUI:
 			self.lightscales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
 			self.lightscales[n].set_hexpand(True)
 			self.lightscales[n].set_vexpand(True)
+			self.lightscales[n].connect("value-changed" , lambda scale : self.tasks.append(self.loop.create_task(self.doUpdateLights(n,scale.get_value()))))
 			self.lightpages[n].append(self.lightscales[n])
 			self.LightPage.append_page(self.lightpages[n],Gtk.Label(label="Light" + str(n)))
 		self.notebook.append_page(self.LightPage,Gtk.Label(label="Light Control"))
@@ -280,6 +281,12 @@ class GUI:
 		attrs["deadband" + str(n)] = str(value)
 		setAttributes()
 		self.lock.release()
+	async def doUpdateLights(self,n,value):
+		global attrs
+		await self.lock.acquire()
+		attrs["light_length" + str(n)] = str(value)
+		setAttributes()
+		self.lock.release()
 	async def autocontrol(self):
 		global attrs
 		while True:
@@ -291,11 +298,3 @@ class GUI:
 			await asyncio.sleep(float(attrs["interval"]))
 # Finalization and execution ****************************************************************************************
 app()
-
-
-
-
-
-
-
-
