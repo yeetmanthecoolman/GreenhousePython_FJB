@@ -238,13 +238,13 @@ class GUI:
 			self.waterscales[n].set_value(float(attrs["control_parameter" + str(n)]))
 			self.waterscales[n].set_hexpand(True)
 			self.waterscales[n].set_vexpand(True)
-			self.waterscales[n].connect("value-changed" , lambda scale : self.tasks.append(self.loop.create_task(self.doUpdateWaterControl(n,scale.get_value()))))
+			self.waterscales[n].connect("value-changed" , lambda scale, g=n : self.tasks.append(self.loop.create_task(self.doUpdateWaterControl(g,scale.get_value()))))
 			self.waterpages[n].set_center_widget(self.waterscales[n])
 			self.deadbandscales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
 			self.deadbandscales[n].set_value(float(attrs["deadband" + str(n)]))
 			self.deadbandscales[n].set_hexpand(True)
 			self.deadbandscales[n].set_vexpand(True)
-			self.deadbandscales[n].connect("value-changed" , lambda scale : self.tasks.append(self.loop.create_task(self.doUpdateDeadband(n,scale.get_value()))))
+			self.deadbandscales[n].connect("value-changed" , lambda scale, g=n : self.tasks.append(self.loop.create_task(self.doUpdateDeadband(g,scale.get_value()))))
 			self.waterpages[n].set_end_widget(self.deadbandscales[n])
 			self.WaterPage.append_page(self.waterpages[n],Gtk.Label(label="Bed " + str(n)))
 		self.notebook.append_page(self.WaterPage,Gtk.Label(label="Water Control"))
@@ -259,7 +259,7 @@ class GUI:
 			self.lightscales[n].set_value(float(attrs["light_length" + str(n)]))
 			self.lightscales[n].set_hexpand(True)
 			self.lightscales[n].set_vexpand(True)
-			self.lightscales[n].connect("value-changed" , lambda scale : self.tasks.append(self.loop.create_task(self.doUpdateLights(n,scale.get_value()))))
+			self.lightscales[n].connect("value-changed" , lambda scale, g=n : self.tasks.append(self.loop.create_task(self.doUpdateLights(g,scale.get_value()))))
 			self.lightpages[n].append(self.lightscales[n])
 			self.LightPage.append_page(self.lightpages[n],Gtk.Label(label="Light" + str(n)))
 		self.notebook.append_page(self.LightPage,Gtk.Label(label="Light Control"))
@@ -309,3 +309,4 @@ class GUI:
 		return None
 # Finalization and execution ****************************************************************************************
 app()
+
