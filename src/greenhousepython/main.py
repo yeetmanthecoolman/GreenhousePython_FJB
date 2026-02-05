@@ -48,10 +48,9 @@ try:
 	import busio
 	import digitalio
 	import board
-	import adafruit_mcp3xxx.mcp3008 as MCP
-	from adafruit_mcp3xxx.analog_in import AnalogIn
+	import mcp3008 as MCP
 except ImportError:
-	from nonsense import GPIO, busio, digitalio, board, MCP, AnalogIn
+	from nonsense import GPIO, busio, digitalio, board, MCP
 import sys
 import gi
 gi.require_version("Gtk", "4.0")
@@ -309,4 +308,5 @@ class GUI:
 		return None
 # Finalization and execution ****************************************************************************************
 app()
+
 
