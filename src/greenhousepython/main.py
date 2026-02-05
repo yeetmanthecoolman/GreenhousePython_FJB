@@ -67,7 +67,7 @@ timesoff = []
 for n in range(int(attrs["lights"])):
 	timesoff.append(datetime.now(timezone.utc))
 # create the mcp object
-mcp = MCP.MCP3008()
+mcp = MCP.MCP3008.fixed([MCP.CH0, MCP.CH1, MCP.CH2, MCP.CH3, MCP.CH4, MCP.CH5, MCP.CH6, MCP.CH7])
 # setup other GPIO
 GPIO.setmode(GPIO.BCM)
 for x in range(int(attrs["lights"])):
@@ -98,7 +98,7 @@ def water():
 	moisture = 0
 	run_pump = False
 	for x in range(int(attrs["beds"])):
-		moisture = mcp.read_all()[x]
+		moisture = mcp()[x]
 		if (attrs["bed" + str(x)] == "False") and (moisture < int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter" + str(x)]) - (float(attrs["deadband" + str(x)])/2))):
 			GPIO.output(int(attrs["waterPin" + str(x)]), GPIO.HIGH)
 			attrs["bed" + str(x)] = "True"
@@ -179,8 +179,7 @@ def create_video(output_video_path : str, fps : int = 24, size : str = None):#up
 
 @app.command()
 def see_data():#Expand on me
-	print(mcp.read_all(norm = False))
-	print(mcp.read_all(norm = True))
+	print(mcp())
 	keys = attrs.keys()#get all the settings
 	for key in keys:
 		print(key + ":" + attrs[key])#assemble key and values into new format
@@ -297,6 +296,7 @@ class GUI:
 		return None
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
