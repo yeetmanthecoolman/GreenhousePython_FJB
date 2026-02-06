@@ -41,10 +41,6 @@ def FileName(fileNumber):
 getDataAttributes()
 hasGUI = True
 try:
-	from picamera2 import Picamera2
-except ImportError:
-	from nonsense import Picamera2
-try:
 	import RPi.GPIO as GPIO
 	import mcp3008 as MCP
 except ImportError:
@@ -78,9 +74,7 @@ for x in range(int(attrs["lights"])):
 for x in range(int(attrs["beds"])):
 	GPIO.setup(int(attrs["waterPin" + str(x)]), GPIO.OUT)
 GPIO.setup(int(attrs["pumpPin"]), GPIO.OUT)
-theCamera = Picamera2()
-theCamera.configure(theCamera.create_still_configuration())
-theCamera.start()
+theCamera = cv2.VideoCapture(0)
 
 # More helpers ***********************************************************************************
 def do_shutdown(*args,**kwargs):
@@ -88,8 +82,7 @@ def do_shutdown(*args,**kwargs):
 	global theCamera
 	mcp.close()
 	
-	#deinitialize the camera
-
+	theCamera.release()
 	GPIO.cleanup()
 	sys.exit(0)
 
@@ -157,17 +150,15 @@ def light():
 #input camera attributes and capture image, updates attributes and returns new attributes
 @app.command()
 def cameraCapture():#updated to not badly reimplement last_file_name
-	global theCamera
 	global attrs
-	try:
-		theCamera.capture_file(FileName(int(attrs["last_file_number"]) + 1))
+	global theCamera
+	ret, frame = theCamera.read()
+	if not ret:
+		assert False
+	else:
+		cv2.imwrite(FileName(int(attrs["last_file_number"]) + 1),frame)
 		attrs["last_file_number"] = str(int(attrs["last_file_number"]) + 1)
 		setAttributes()
-		return attrs
-	except Exception:
-		if attrs["is_debug"] == "True":
-			print("we failed at photography, for some reason")
-		return attrs
 
 @app.command()
 def create_video(output_video_path : str, fps : int = 24, size : str = None):#update to automatically build image_paths
@@ -369,6 +360,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
