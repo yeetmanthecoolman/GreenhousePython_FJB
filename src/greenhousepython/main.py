@@ -317,7 +317,38 @@ class GUI:
 			self.lock.release()
 			return None
 		thingToChange = row.get_child().get_text()
-		
+		if ["file_name_prefix"].count(thingToChange) != 0:
+			print("This part needs logic for automatically renaming files, which I haven't written yet. Sorry!")
+			assert False
+		elif ["interval","longitude","latitude","elevation"].count(thingToChange) != 0:
+			try:
+				new_val = str(float(self.SettingsTextBox.get_text()))
+			except ValueError:
+				print("We kinda need these to be floats.")
+				self.lock.release()
+				return None
+		elif ["lights","pumpPin","beds","MAX_VALUE"].count(thingToChange) != 0 or thingToChange.startswith("lightPin") or thingToChange.startswith("waterPin"):
+			if ["lights","beds"].count(thingToChange) != 0:
+				print("When these are changed, the GUI needs to be rearranged, which I haven't coded yet.")
+				assert False
+			try:
+				new_val = str(int(self.SettingsTextBox.get_text()))
+			except ValueError:
+				print("We kinda need these to be ints.")
+				self.lock.release()
+				return None
+		elif ["is_debug"].count(thingToChange) != 0:
+			if ["True","False"].count(self.SettingsTextBox.get_text()) == 0:
+				print("We kinda need these to be bools.")
+				self.lock.release()
+				return None
+		elif ["last_file_number"].count(thingToChange) != 0 or thingToChange.startswith("bed") or thingToChange.startswith("control_parameter") or thingToChange.startswith("deadband"):#this only doesn't catch beds because we already found it on line 330
+			print("Changing this randomly will definitley break the software. If you know what you're doing, use the CLI, which is less picky")
+			self.lock.release()
+			return None
+		attrs[thingToChange] = self.SettingsTextBox.get_text()
+		setAttributes()
+		self.lock.release()
 	async def autocontrol(self):
 		global attrs
 		while True:
@@ -338,6 +369,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
