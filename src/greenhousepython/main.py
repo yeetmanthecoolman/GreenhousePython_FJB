@@ -41,6 +41,10 @@ def FileName(fileNumber):
 getDataAttributes()
 hasGUI = True
 try:
+	import cv2
+except ImportError:
+	from nonsense import cv2
+try:
 	import RPi.GPIO as GPIO
 	import mcp3008 as MCP
 except ImportError:
@@ -54,8 +58,6 @@ try:
 	from gi.events import GLibEventLoopPolicy
 except Exception:
 	hasGUI = False
-import cv2
-from PIL import Image
 from datetime import datetime, timedelta, timezone
 from astral import sun, Observer
 import signal
@@ -360,6 +362,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
