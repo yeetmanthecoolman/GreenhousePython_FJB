@@ -39,6 +39,7 @@ def FileName(fileNumber):
 # Initialization ****************************************************************************************
 
 getDataAttributes()
+hasGUI = True
 try:
 	from picamera2 import Picamera2
 except ImportError:
@@ -49,11 +50,14 @@ try:
 except ImportError:
 	from nonsense import GPIO, MCP
 import sys
-import gi
-gi.require_version("Gtk", "4.0")
-from gi.repository import GLib, Gtk
 import asyncio
-from gi.events import GLibEventLoopPolicy
+try:
+	import gi
+	gi.require_version("Gtk", "4.0")
+	from gi.repository import GLib, Gtk
+	from gi.events import GLibEventLoopPolicy
+except Exception:
+	hasGUI = False
 import cv2
 from PIL import Image
 from datetime import datetime, timedelta, timezone
@@ -207,6 +211,8 @@ def start_gui():
 
 class GUI:
 	def __init__(self):
+		global hasGUI
+		assert hasGUI#thou shalt not start the GUI without a GUI. See lines 54-60 for more info.
 		self.lock = asyncio.Lock()
 		self.Policy = GLibEventLoopPolicy()
 		asyncio.set_event_loop_policy(self.Policy)
@@ -310,5 +316,6 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
