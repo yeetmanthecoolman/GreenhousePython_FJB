@@ -280,14 +280,11 @@ class GUI:
 			tmp = Gtk.ListBoxRow()
 			tmp.set_child(Gtk.Label(label=key))
 			self.SettingsListBox.append(tmp)
-		tmp = Gtk.ListBoxRow()
-		tmp.set_child(Gtk.Label(label="Create New..."))
-		self.SettingsListBox.append(tmp)
 		self.SettingsPage.append(self.SetingsListBox)
 		self.SettingsConfigBox = Gtk.CenterBox()
-		self.SettingsConfigLabel = Gtk.Label(label="This text should disappear in a hurry.")
+		self.SettingsConfigLabel = Gtk.Label(label="In order for you to change a setting, you must choose the setting to change.")
 		self.SettingsConfigBox.set_start_widget(self.SettingsConfigLabel)
-		self.SettingsTextBox = None#Placeholder
+		self.SettingsTextBox = Gtk.Entry()
 		self.SettingsConfigBox.set_center_widget(self.SettingsTextBox)
 		self.SettingsEntryButton = Gtk.Button.new_with_label("Change the setting")
 		self.SettingsEntryButton.connect("clicked", lambda button, self.tasks.append(self.loop.create_task(self.doUpdateSettings())))
@@ -315,6 +312,11 @@ class GUI:
 	async def doUpdateSettings(self):
 		global attrs
 		await self.lock.acquire()
+		row = self.SettingsListBox.get_selected_row()
+		if row == None:
+			self.lock.release()
+			return None
+		thingToChange = row.get_child().get_text()
 		
 	async def autocontrol(self):
 		global attrs
@@ -336,6 +338,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
