@@ -13,7 +13,7 @@ dependencies = [ "PyGObject", "astral", "opencv-python", "pillow", "typer", "ric
 readme = "README.md"
 
 [project.optional-dependencies]
-camera-nonsense = ["rpi-libcamera", "rpi-kms", "picamera2"]
+camera-nonsense = ["rpi-libcamera @ git+https://github.com/yeetmanthecoolman/pylibcamera.git", "rpi-kms", "picamera2"]
 rpi = [ "mcp3008", "RPi.GPIO" ]
 dev = [ "wheel", "poetry" ]
 
