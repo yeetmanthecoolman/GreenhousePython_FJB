@@ -13,11 +13,11 @@ class GPIO:
   OUT = None
   HIGH = None
   LOW = None
-  def setmode(thing):
+  def setmode(*args,**kwargs):
     pass
-  def setup(pin,mode):
+  def setup(*args,**kwargs):
     pass
-  def output(pin,thing):
+  def output(*args,**kwargs):
     pass
 
 class MCP:
@@ -32,4 +32,16 @@ class MCP:
 
 class MCP3008:
   def fixed(*args,**kwargs):
+    pass
+
+class cv2:
+  def VideoCapture(*args,**kwargs):
+    pass
+  def imwrite(*args,**kwargs):
+    pass
+  def imread(*args,**kwargs):
+    pass
+  def VideoWriter_fourcc(*args,**kwargs):
+    pass
+  def resize(*args,**kwargs):
     pass
