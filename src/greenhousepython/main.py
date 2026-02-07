@@ -47,8 +47,9 @@ except ImportError:
 try:
 	import RPi.GPIO as GPIO
 	import mcp3008 as MCP
+	from mcp3008 import MCP3008
 except ImportError:
-	from nonsense import GPIO, MCP
+	from nonsense import GPIO, MCP, MCP3008
 import sys
 import asyncio
 try:
@@ -68,7 +69,7 @@ timesoff = []
 for n in range(int(attrs["lights"])):
 	timesoff.append(datetime.now(timezone.utc))
 # create the mcp object
-mcp = MCP.MCP3008.fixed([MCP.CH0, MCP.CH1, MCP.CH2, MCP.CH3, MCP.CH4, MCP.CH5, MCP.CH6, MCP.CH7])
+mcp = MCP3008.fixed([MCP.CH0, MCP.CH1, MCP.CH2, MCP.CH3, MCP.CH4, MCP.CH5, MCP.CH6, MCP.CH7])
 # setup other GPIO
 GPIO.setmode(GPIO.BCM)
 for x in range(int(attrs["lights"])):
@@ -362,6 +363,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
