@@ -282,6 +282,8 @@ class GUI:
 		self.SettingsConfigBox.set_center_widget(self.SettingsTextBox)
 		self.SettingsEntryButton = Gtk.Button.new_with_label("Change the setting")
 		self.SettingsEntryButton.connect("clicked", lambda button: self.tasks.append(self.loop.create_task(self.doUpdateSettings())))
+		self.SettingsConfigBox.set_end_widget(self.SettingsEntryButton)
+		self.SettingsPage.append(self.SettingsConfigBox)
 		self.notebook.append_page(self.SettingsPage,Gtk.Label(label="Settigs"))
 		self.window.present()
 		self.tasks.append(self.loop.create_task(self.autocontrol()))
@@ -363,4 +365,5 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
