@@ -24,5 +24,7 @@ class MCP:
   P0 = None
   P1 = None
   P2 = None
-  def MCP3008(spi, cs):
-    return None
+
+class MCP3008:
+  def fixed(*args,**kwargs):
+    pass
