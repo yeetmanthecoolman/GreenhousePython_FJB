@@ -290,6 +290,7 @@ class GUI:
 		self.notebook.append_page(self.SettingsPage,Gtk.Label(label="Settigs"))
 		self.window.present()
 		self.tasks.append(self.loop.create_task(self.autocontrol()))
+		self.tasks.append(self.loop.create_task(self.cameracontrol()))
 	async def doUpdateWaterControl(self,n,value):
 		global attrs
 		await self.lock.acquire()
@@ -354,10 +355,16 @@ class GUI:
 			await self.lock.acquire()
 			water()
 			light()
-			cameraCapture()
 			self.lock.release()
 			await self.doUpdateGUI()
 			await asyncio.sleep(float(attrs["interval"]))
+	async def cameraControl(self):
+		global attrs
+		while True:
+			await self.lock.acquire()
+			cameraCapture()
+			self.lock.release()
+			await asyncio.sleep(float(attrs["camera_interval"]))
 	async def doUpdateGUI(self):
 		for n in range(int(attrs["beds"])):
 			if (attrs["bed" + str(n)] == "True"):
@@ -368,6 +375,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
