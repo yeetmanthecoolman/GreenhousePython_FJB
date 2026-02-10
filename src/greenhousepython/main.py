@@ -231,8 +231,13 @@ class GUI:
 		self.notebook = Gtk.Notebook()
 		self.window.set_child(self.notebook)
 		#stuff goes here
-		self.CameraPage = Gtk.Box()
-		self.CameraPage.append(Gtk.Label(label="This is a test of whether the camera page will work."))
+		self.CameraPage = Gtk.CenterBox()
+		self.previewImage = Gtk.Image.new_from_file(FileName(int(attrs["last_file_number"])))
+		self.CameraPage.set_start_widget(self.previewImage)
+		self.cameraText = Gtk.Label(label="Overall, " + attrs["last_file_number"] + " images have been captured by this device.\nCurrently, images will be captured every " + attrs["last_file_number"] + " seconds.")
+		self.CameraPage.set_center_widget(self.cameraText)
+		self.captureButton = Gtk.Button.new_with_label("Capture a photograph manually.")
+		self.captureButton.connect("clicked", lambda button: self.tasks.append(self.loop.create_task(self.doForcedCapture())))
 		self.notebook.append_page(self.CameraPage,Gtk.Label(label="Camera Control"))
 		self.WaterPage = Gtk.Notebook()
 		self.waterpages = []
@@ -295,6 +300,12 @@ class GUI:
 		self.window.present()
 		self.tasks.append(self.loop.create_task(self.autocontrol()))
 		self.tasks.append(self.loop.create_task(self.cameraControl()))
+	async def doForcedCapture(self):
+		global attrs
+		await self.lock.acquire()
+		camera_capture()
+		await self.doUpdateGUI()
+		self.lock.release()
 	async def doUpdateWaterControl(self,n,value):
 		global attrs
 		await self.lock.acquire()
@@ -367,18 +378,23 @@ class GUI:
 		while True:
 			await self.lock.acquire()
 			camera_capture()
+			await self.doUpdateGUI()
 			self.lock.release()
 			await asyncio.sleep(float(attrs["camera_interval"]))
 	async def doUpdateGUI(self):
+		global attrs
 		for n in range(int(attrs["beds"])):
 			if (attrs["bed" + str(n)] == "True"):
 				self.waterpages[n].get_start_widget().set_label("Bed " + str(n) + " is running.")
 			else:
 				self.waterpages[n].get_start_widget().set_label("Bed " + str(n) + " is not running.")
+		self.previewImage.set_from_file(FileName(int(attrs["last_file_number"])))
+		self.cameraText.set_label("Overall, " + attrs["last_file_number"] + " images have been captured by this device.\nCurrently, images will be captured every " + attrs["last_file_number"] + " seconds.")
 		return None
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
