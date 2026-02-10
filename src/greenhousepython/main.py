@@ -178,15 +178,16 @@ def camera_capture():#updated to not badly reimplement last_file_name
 		setAttributes()
 
 @app.command()
-def create_video(output_video_path : str, fps : int = 24, size : str = None):#update to automatically build image_paths
+def create_video(output_video_path : str, fps : int = 24, size : str = None):
 	image_paths = []
 	for num in range(1,int(attrs["last_file_number"])+1):
-		image_paths.append(FileName(num))
+		if cv2.imread(FileName(num)) is not None:
+			image_paths.append(FileName(num))
+		else:
+			print("Warning: could not read " + FileName(num) + ", skipping.")
 	if not image_paths:
-		raise ValueError("The list of image paths is empty")
+		raise ValueError("Umm, we need images to make a video.")
 	first_frame = cv2.imread(image_paths[0])
-	if first_frame is None:
-		raise ValueError("Cannot read image at path")#This should be improved. 
 	if size is None:
 		height, width, _ = first_frame.shape
 		size = (width, height)
@@ -194,13 +195,10 @@ def create_video(output_video_path : str, fps : int = 24, size : str = None):#up
 	out = cv2.VideoWriter(output_video_path, fourcc, fps, size)
 	for path in image_paths:
 		frame = cv2.imread(path)
-		if frame is None:
-			print(f"Warning: Could not read {path}, skipping.")
-			continue
 		frame_resized = cv2.resize(frame, size)
 		out.write(frame_resized)
 	out.release()
-	print(f"Vido saved to {output_video_path}")
+	print(f"Video saved to {output_video_path}")
 
 #A command that lets you see the information flying through cyberspace.
 @app.command()
@@ -405,12 +403,3 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
-
-
-
-
-
-
-
-
-
