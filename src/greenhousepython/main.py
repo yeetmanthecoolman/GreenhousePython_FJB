@@ -256,6 +256,7 @@ class GUI:
 		self.CameraPage.set_center_widget(self.cameraText)
 		self.captureButton = Gtk.Button.new_with_label("Capture a photograph manually.")
 		self.captureButton.connect("clicked", lambda button: self.tasks.append(self.loop.create_task(self.doForcedCapture())))
+		self.CameraPage.set_end_widget(self.captureButton)
 		self.notebook.append_page(self.CameraPage,Gtk.Label(label="Camera Control"))
 		self.WaterPage = Gtk.Notebook()
 		self.waterpages = []
@@ -412,6 +413,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
