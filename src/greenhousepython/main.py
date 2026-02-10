@@ -111,7 +111,6 @@ def change_setting(key : str, value : str):
 @app.command()
 def water():
 	global attrs
-	moisture = 0
 	run_pump = False
 	try:#my crummy mock of mcp3008.MCP3008 can't make sense of line 118, so this eyesore is trapped in a try-catch.
 		for x in range(int(attrs["beds"])):
@@ -134,7 +133,16 @@ def water():
 		print("We failed at water control. This is probably because we aren't connected to an MCP3008, which is reasonable. If it isn't reasonable, check the dependencies.")
 
 @app.command()
-def light():#This code is a disaster area.
+def light():#This code is a disaster area. Essentially, here's the logic:
+	#If this code runs at night and before midnight, then it will be after sunset and after sunrise.
+	#If this code runs at night and after midnight, then it will be before sunset and before sunrise.
+	#If this code runs during the day, then it will be before sunset and after sunrise.
+	#If this code runs and it is after sunset and before sunrise, time itself has crashed.
+	#The problem comes when it's after midnight and we need to figure out when to turn the lights off: if we use the sunset time on the current day, we will never turn the lights off. Bad.
+	#The solution I found is to calculate the time in UTC when we need to turn off the lights, do said calculation before midnight when the API is still talking about the correct sunset, and then just intentionally let this number get stale it's night and before midnight, at which point we will be talking about the right sunset again.
+	#A consequence of this is that if you adjust the light length at any reasonable hour, it will only update the next day.
+	#Another consequence of this is that if you run this code in Iceland or something where the sun won't rise on certain days of the year, this code will catch fire.
+	#There must be a better solution than this, but I couldn't find it. Shrug emoji.
 	global attrs
 	global timesoff
 	observer = Observer(float(attrs["latitude"]),float(attrs["longitude"]),float(attrs["elevation"]))
@@ -220,11 +228,14 @@ class GUI:
 		self.loop = self.Policy.get_event_loop()
 		self.tasks = []
 		self.App = Gtk.Application(application_id="com.github.sp29174.GreenhousePython")
-		print("we have super")
+		if attrs["is_debug"]=="True":
+			print("we have super")
 		self.App.connect("activate",self.do_activate)
-		print("we can bind")
+		if attrs["is_debug"]=="True":
+			print("we can bind")
 		self.App.run(None)
-		print("we get to a weird place")
+		if attrs["is_debug"]=="True":
+			print("we get to the bloody twilight zone")
 	def do_activate(self,useless):
 		global attrs
 		self.window = Gtk.ApplicationWindow(application=self.App)
@@ -245,12 +256,12 @@ class GUI:
 		self.deadbandscales = []
 		for n in range(int(attrs["beds"])):
 			self.waterpages.append(Gtk.CenterBox())
-			self.waterpages[n].set_start_widget(Gtk.Label(label="This text should vanish before you can read it."))
+			self.waterpages[n].set_start_widget(Gtk.Label(label="This text should vanish before you can read it."))#Namely, line 312 should cause autocontrol to await doUpdateGUI which should disappear this placeholder. If anything crashes between here and line 402, this text will live and we learn of a problem.
 			self.waterscales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
 			self.waterscales[n].set_value(float(attrs["control_parameter" + str(n)]))
 			self.waterscales[n].set_hexpand(True)
 			self.waterscales[n].set_vexpand(True)
-			self.waterscales[n].connect("value-changed" , lambda scale, g=n : self.tasks.append(self.loop.create_task(self.doUpdateWaterControl(g,scale.get_value()))))
+			self.waterscales[n].connect("value-changed" , lambda scale, g=n : self.tasks.append(self.loop.create_task(self.doUpdateWaterControl(g,scale.get_value()))))#This line of code is the answer to a specific engineering question: how many obscure features of Python can fit in one line of code? It also makes the slider schedule a task when you move it, so that it neither blocks the GUI nor fails to do anything.
 			self.waterpages[n].set_center_widget(self.waterscales[n])
 			self.deadbandscales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
 			self.deadbandscales[n].set_value(float(attrs["deadband" + str(n)]))
@@ -357,7 +368,7 @@ class GUI:
 				print("We kinda need these to be bools.")
 				self.lock.release()
 				return None
-		elif ["last_file_number"].count(thingToChange) != 0 or thingToChange.startswith("bed") or thingToChange.startswith("control_parameter") or thingToChange.startswith("deadband"):#this only doesn't catch beds because we already found it on line 330
+		elif ["last_file_number"].count(thingToChange) != 0 or thingToChange.startswith("bed") or thingToChange.startswith("control_parameter") or thingToChange.startswith("deadband"):#this only doesn't catch beds because we already found it on line 356
 			print("Changing this randomly will definitley break the software. If you know what you're doing, use the CLI, which is less picky")
 			self.lock.release()
 			return None
@@ -394,6 +405,7 @@ class GUI:
 
 # Finalization and execution ****************************************************************************************
 app()
+
 
 
 
