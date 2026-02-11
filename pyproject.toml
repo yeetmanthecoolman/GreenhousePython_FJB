@@ -15,8 +15,8 @@ readme = "README.md"
 [project.optional-dependencies]
 camera-nonsense = ["opencv-python"]
 rpi = [ "mcp3008", "RPi.GPIO" ]
-dev = [ "wheel", "poetry" ]
-GUI = [ "PyGObject" ]
+dev = [ "wheel", "poetry>=2.0.0" ]
+GUI = [ "PyGObject>=3.40.0" ]
 
 [build-system]
 requires = ["poetry-core>2.0.0,<3.0.0"]
