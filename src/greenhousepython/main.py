@@ -66,9 +66,9 @@ import signal
 
 # Postinitialization ****************************************************************************************
 
-timesoff = []
+times_off = []
 for n in range(int(attrs["lights"])):
-	timesoff.append(datetime.now(timezone.utc))
+	times_off.append(datetime.now(timezone.utc))
 # create the mcp object
 mcp = MCP3008.fixed([MCP.CH0, MCP.CH1, MCP.CH2, MCP.CH3, MCP.CH4, MCP.CH5, MCP.CH6, MCP.CH7])
 # setup other GPIO
@@ -78,18 +78,18 @@ for x in range(int(attrs["lights"])):
 for x in range(int(attrs["beds"])):
 	GPIO.setup(int(attrs["waterPin" + str(x)]), GPIO.OUT)
 GPIO.setup(int(attrs["pumpPin"]), GPIO.OUT)
-theCamera = cv2.VideoCapture(0)
+the_camera = cv2.VideoCapture(0)
 
 # More helpers ***********************************************************************************
 def do_shutdown(*args,**kwargs):
 	global mcp
-	global theCamera
+	global the_camera
 	try:#we shouldn't let crashes prevent the program from closing, so these must all be wrapped with try.
 		mcp.close()#close down water control coms
 	except Exception:
 		print("Warning: we couldn't close down the water control communitcations.")
 	try:
-		theCamera.release()#turn off the damn camera
+		the_camera.release()#turn off the damn camera
 	except Exception:
 		print("Warning: we couldn't close down the camera.")
 	try:
@@ -150,19 +150,19 @@ def light():#This code is a disaster area. Essentially, here's the logic:
 	#Another consequence of this is that if you run this code in Iceland or something where the sun won't rise on certain days of the year, this code will catch fire.
 	#There must be a better solution than this, but I couldn't find it. Shrug emoji.
 	global attrs
-	global timesoff
+	global times_off
 	observer = Observer(float(attrs["latitude"]),float(attrs["longitude"]),float(attrs["elevation"]))
-	theSun = sun.daylight(observer)#The sun is a deadly laser
-	if (datetime.now(timezone.utc) > theSun[1]):
+	the_sun = sun.daylight(observer)#The sun is a deadly laser
+	if (datetime.now(timezone.utc) > the_sun[1]):
 		if attrs["is_debug"] == "True":
 			print("We think that it's after sunset.")
 		for n in range(int(attrs["lights"])):
-			timesoff[n] = theSun[0] + timedelta(days=float(attrs["light_length" + str(n)]))
+			times_off[n] = the_sun[0] + timedelta(days=float(attrs["light_length" + str(n)]))
 	elif attrs["is_debug"] == "True":
 		print("We think that it's before sunset.")
 	for n in range(int(attrs["lights"])):
 		light_on = False
-		if (datetime.now(timezone.utc) < timesoff[n]):
+		if (datetime.now(timezone.utc) < times_off[n]):
 			light_on = True
 			if attrs["is_debug"] == "True":
 				print("The light should be on.")
@@ -174,8 +174,8 @@ def light():#This code is a disaster area. Essentially, here's the logic:
 @app.command()
 def camera_capture():#updated to not badly reimplement last_file_name
 	global attrs
-	global theCamera
-	ret, frame = theCamera.read()
+	global the_camera
+	ret, frame = the_camera.read()
 	if not ret:
 		if not attrs["is_debug"] == "True":
 			assert False
@@ -425,6 +425,7 @@ class GUI:
 # Finalization and execution ****************************************************************************************
 if __name__ == "__main__":
 	app()
+
 
 
 
