@@ -7,7 +7,7 @@ light_length0:0.5
 latitude:43.0972
 longitude:-89.5043
 elevation:355.0
-lightPin0:21
+light_pin0:21
 pumpPin:15
 waterPin0:16
 waterPin1:17
