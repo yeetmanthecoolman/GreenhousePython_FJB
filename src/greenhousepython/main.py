@@ -76,7 +76,7 @@ GPIO.setmode(GPIO.BCM)
 for x in range(int(attrs["lights"])):
 	GPIO.setup(int(attrs["light_pin" + str(x)]), GPIO.OUT)
 for x in range(int(attrs["beds"])):
-	GPIO.setup(int(attrs["waterPin" + str(x)]), GPIO.OUT)
+	GPIO.setup(int(attrs["water_pin" + str(x)]), GPIO.OUT)
 GPIO.setup(int(attrs["pump_pin"]), GPIO.OUT)
 the_camera = cv2.VideoCapture(0)
 
@@ -122,11 +122,11 @@ def water():
 		for x in range(int(attrs["beds"])):
 			moisture = mcp()[x]
 			if (attrs["bed" + str(x)] == "False") and (moisture < int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter" + str(x)]) - (float(attrs["deadband" + str(x)])/2))):#this if-else is basically an inelegant hysteresis controller. On the other hand, we're being rewarded for not destroying the pump, not for elegantly destroying the pump.
-				GPIO.output(int(attrs["waterPin" + str(x)]), GPIO.HIGH)
+				GPIO.output(int(attrs["water_pin" + str(x)]), GPIO.HIGH)
 				attrs["bed" + str(x)] = "True"
 				set_attributes()
 			elif (attrs["bed" + str(x)] == "True") and (moisture > int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter" + str(x)]) + (float(attrs["deadband" + str(x)])/2))):
-				GPIO.output(int(attrs["waterPin" + str(x)]), GPIO.LOW)
+				GPIO.output(int(attrs["water_pin" + str(x)]), GPIO.LOW)
 				attrs["bed" + str(x)] = "False"
 				set_attributes()
 			if (attrs["bed" + str(x)] == "True"):
@@ -372,7 +372,7 @@ class GUI:
 				print("We kinda need these to be floats.")
 				self.lock.release()
 				return None
-		elif ["lights","pump_pin","beds","MAX_VALUE"].count(setting_to_change) != 0 or setting_to_change.startswith("light_pin") or setting_to_change.startswith("waterPin"):
+		elif ["lights","pump_pin","beds","MAX_VALUE"].count(setting_to_change) != 0 or setting_to_change.startswith("light_pin") or setting_to_change.startswith("water_pin"):
 			if ["lights","beds"].count(setting_to_change) != 0:
 				print("When these are changed, the GUI needs to be rearranged, which I haven't coded yet.")
 				assert False
@@ -425,6 +425,7 @@ class GUI:
 # Finalization and execution ****************************************************************************************
 if __name__ == "__main__":
 	app()
+
 
 
 
