@@ -259,6 +259,10 @@ class GUI:
 		self.capture_button.connect("clicked", lambda button: self.tasks.append(self.loop.create_task(self.force_capture())))
 		self.capture_box.append(self.capture_button)
 		self.record_button = Gtk.ToggleButton(label="Toggle recording.")
+		if attrs["recording_status"] == "True":
+			self.record_button.set_active(True)
+		else:
+			self.record_button.set_active(False)
 		self.record_button.connect("toggled", lambda button: self.tasks.append(self.loop.create_task(self.toggle_recording(button.props.active))))
 		self.capture_box.append(self.record_button)
 		self.camera_page.set_end_widget(self.capture_box)
@@ -407,7 +411,8 @@ class GUI:
 		global attrs
 		while True:
 			await self.lock.acquire()
-			camera_capture()
+			if attrs["recording_status"] == True:
+				camera_capture()
 			await self.update_GUI()
 			self.lock.release()
 			await asyncio.sleep(float(attrs["camera_interval"]))
@@ -425,6 +430,7 @@ class GUI:
 # Finalization and execution ****************************************************************************************
 if __name__ == "__main__":
 	app()
+
 
 
 
