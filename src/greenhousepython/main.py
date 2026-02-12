@@ -269,7 +269,7 @@ class GUI:
 		self.deadband_scales = []
 		for n in range(int(attrs["beds"])):
 			self.water_pages.append(Gtk.CenterBox())
-			self.water_pages[n].set_start_widget(Gtk.Label(label="This text should vanish before you can read it."))#Namely, line 312 should cause autocontrol to await doUpdateGUI which should disappear this placeholder. If anything crashes between here and line 402, this text will live and we learn of a problem.
+			self.water_pages[n].set_start_widget(Gtk.Label(label="This text should vanish before you can read it."))#Namely, line 312 should cause automatic_control to await doUpdateGUI which should disappear this placeholder. If anything crashes between here and line 402, this text will live and we learn of a problem.
 			self.water_scales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
 			self.water_scales[n].set_value(float(attrs["control_parameter" + str(n)]))
 			self.water_scales[n].set_hexpand(True)
@@ -284,46 +284,46 @@ class GUI:
 			self.water_pages[n].set_end_widget(self.deadband_scales[n])
 			self.water_page.append_page(self.water_pages[n],Gtk.Label(label="Bed " + str(n)))
 		self.notebook.append_page(self.water_page,Gtk.Label(label="Water Control"))
-		self.LightPage = Gtk.Notebook()
-		self.lightpages = []
-		self.lightscales = []
+		self.light_page = Gtk.Notebook()
+		self.light_pages = []
+		self.light_scales = []
 		for n in range(int(attrs["lights"])):
-			self.lightpages.append(Gtk.Box())
-			self.lightpages[n].append(Gtk.Label(label="This is a test of the light control interface."))
-			self.lightpages[n].append(Gtk.Label(label="This will eventually display an indicator of if the light is running and a slider to control hours."))
-			self.lightscales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
-			self.lightscales[n].set_value(float(attrs["light_length" + str(n)]))
-			self.lightscales[n].set_hexpand(True)
-			self.lightscales[n].set_vexpand(True)
-			self.lightscales[n].connect("value-changed" , lambda scale, g=n : self.tasks.append(self.loop.create_task(self.doUpdateLights(g,scale.get_value()))))
-			self.lightpages[n].append(self.lightscales[n])
-			self.LightPage.append_page(self.lightpages[n],Gtk.Label(label="Light" + str(n)))
-		self.notebook.append_page(self.LightPage,Gtk.Label(label="Light Control"))
-		self.HelpPage = Gtk.Box()
-		self.HelpPage.append(Gtk.Label(label="This is a test of whether buttons work."))
-		self.HelpPage.append(Gtk.Button.new_with_label("this is a button."))
-		self.notebook.append_page(self.HelpPage,Gtk.Label(label="Help"))
-		self.SettingsPage = Gtk.Box()
-		self.SettingsPage.append(Gtk.Label(label="This window should allow you to adjust settings."))
-		self.SettingsListBox = Gtk.ListBox()
+			self.light_pages.append(Gtk.Box())
+			self.light_pages[n].append(Gtk.Label(label="This is a test of the light control interface."))
+			self.light_pages[n].append(Gtk.Label(label="This will eventually display an indicator of if the light is running and a slider to control hours."))
+			self.light_scales.append(Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL,0,1,0.01))
+			self.light_scales[n].set_value(float(attrs["light_length" + str(n)]))
+			self.light_scales[n].set_hexpand(True)
+			self.light_scales[n].set_vexpand(True)
+			self.light_scales[n].connect("value-changed" , lambda scale, g=n : self.tasks.append(self.loop.create_task(self.doUpdateLights(g,scale.get_value()))))
+			self.light_pages[n].append(self.light_scales[n])
+			self.light_page.append_page(self.light_pages[n],Gtk.Label(label="Light" + str(n)))
+		self.notebook.append_page(self.light_page,Gtk.Label(label="Light Control"))
+		self.help_page = Gtk.Box()
+		self.help_page.append(Gtk.Label(label="This is a test of whether buttons work."))
+		self.help_page.append(Gtk.Button.new_with_label("this is a button."))
+		self.notebook.append_page(self.help_page,Gtk.Label(label="Help"))
+		self.settings_page = Gtk.Box()
+		self.settings_page.append(Gtk.Label(label="This window should allow you to adjust settings."))
+		self.settings_listbox = Gtk.ListBox()
 		for key in attrs.keys():
 			tmp = Gtk.ListBoxRow()
 			tmp.set_child(Gtk.Label(label=key))
-			self.SettingsListBox.append(tmp)
-		self.SettingsPage.append(self.SettingsListBox)
-		self.SettingsConfigBox = Gtk.CenterBox()
-		self.SettingsConfigLabel = Gtk.Label(label="In order for you to change a setting, you must choose the setting to change.")
-		self.SettingsConfigBox.set_start_widget(self.SettingsConfigLabel)
-		self.SettingsTextBox = Gtk.Entry()
-		self.SettingsConfigBox.set_center_widget(self.SettingsTextBox)
-		self.SettingsEntryButton = Gtk.Button.new_with_label("Change the setting")
-		self.SettingsEntryButton.connect("clicked", lambda button: self.tasks.append(self.loop.create_task(self.doUpdateSettings())))
-		self.SettingsConfigBox.set_end_widget(self.SettingsEntryButton)
-		self.SettingsPage.append(self.SettingsConfigBox)
-		self.notebook.append_page(self.SettingsPage,Gtk.Label(label="Settigs"))
+			self.settings_listbox.append(tmp)
+		self.settings_page.append(self.settings_listbox)
+		self.settings_config_box = Gtk.CenterBox()
+		self.settings_config_label = Gtk.Label(label="In order for you to change a setting, you must choose the setting to change.")
+		self.settings_config_box.set_start_widget(self.settings_config_label)
+		self.settings_text_entry = Gtk.Entry()
+		self.settings_config_box.set_center_widget(self.settings_text_entry)
+		self.settings_enter_button = Gtk.Button.new_with_label("Change the setting")
+		self.settings_enter_button.connect("clicked", lambda button: self.tasks.append(self.loop.create_task(self.doUpdateSettings())))
+		self.settings_config_box.set_end_widget(self.settings_enter_button)
+		self.settings_page.append(self.settings_config_box)
+		self.notebook.append_page(self.settings_page,Gtk.Label(label="Settigs"))
 		self.window.present()
-		self.tasks.append(self.loop.create_task(self.autocontrol()))
-		self.tasks.append(self.loop.create_task(self.cameraControl()))
+		self.tasks.append(self.loop.create_task(self.automatic_control()))
+		self.tasks.append(self.loop.create_task(self.camera_control()))
 	async def doToggleRecording(self,whermst):
 		global attrs
 		await self.lock.acquire()
@@ -357,7 +357,7 @@ class GUI:
 	async def doUpdateSettings(self):
 		global attrs
 		await self.lock.acquire()
-		row = self.SettingsListBox.get_selected_row()
+		row = self.settings_listbox.get_selected_row()
 		if row == None:
 			self.lock.release()
 			return None
@@ -367,7 +367,7 @@ class GUI:
 			assert False
 		elif ["interval","longitude","latitude","elevation"].count(thingToChange) != 0:
 			try:
-				new_val = str(float(self.SettingsTextBox.get_text()))
+				new_val = str(float(self.settings_text_entry.get_text()))
 			except ValueError:
 				print("We kinda need these to be floats.")
 				self.lock.release()
@@ -377,13 +377,13 @@ class GUI:
 				print("When these are changed, the GUI needs to be rearranged, which I haven't coded yet.")
 				assert False
 			try:
-				new_val = str(int(self.SettingsTextBox.get_text()))
+				new_val = str(int(self.settings_text_entry.get_text()))
 			except ValueError:
 				print("We kinda need these to be ints.")
 				self.lock.release()
 				return None
 		elif ["is_debug"].count(thingToChange) != 0:
-			if ["True","False"].count(self.SettingsTextBox.get_text()) == 0:
+			if ["True","False"].count(self.settings_text_entry.get_text()) == 0:
 				print("We kinda need these to be bools.")
 				self.lock.release()
 				return None
@@ -391,10 +391,10 @@ class GUI:
 			print("Changing this randomly will definitley break the software. If you know what you're doing, use the CLI, which is less picky")
 			self.lock.release()
 			return None
-		attrs[thingToChange] = self.SettingsTextBox.get_text()
+		attrs[thingToChange] = self.settings_text_entry.get_text()
 		set_attributes()
 		self.lock.release()
-	async def autocontrol(self):
+	async def automatic_control(self):
 		global attrs
 		while True:
 			await self.lock.acquire()
@@ -403,7 +403,7 @@ class GUI:
 			self.lock.release()
 			await self.doUpdateGUI()
 			await asyncio.sleep(float(attrs["interval"]))
-	async def cameraControl(self):
+	async def camera_control(self):
 		global attrs
 		while True:
 			await self.lock.acquire()
@@ -425,6 +425,7 @@ class GUI:
 # Finalization and execution ****************************************************************************************
 if __name__ == "__main__":
 	app()
+
 
 
 
