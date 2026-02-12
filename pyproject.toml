@@ -29,4 +29,4 @@ documentation = "https://github.com/sp29174/GreenhousePython/wiki"
 
 [tool.poetry]
 package-mode = true
-include = [ { path = "images" }, { path = "docs" } ]
+include = [ { path = "images", format = ["sdist", "wheel"] }, { path = "docs" } ]
