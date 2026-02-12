@@ -11,7 +11,7 @@ attrs = {}
 #Helpers ****************************************************************************************
 
 #read configuration information from cfg.txt and use it
-def getDataAttributes():
+def get_attributes():
 	global attrs
 	cfg = open("cfg.txt", "r")
 	for thing in cfg.readlines():#find all things seperated by newlines
@@ -20,7 +20,7 @@ def getDataAttributes():
 	cfg.close()
 
 #rewrite the list with updated values
-def setAttributes():
+def set_attributes():
 	global attrs
 	cfg = open("cfg.txt", "w")#open file to write
 	accumulator = []
@@ -31,16 +31,16 @@ def setAttributes():
 	cfg.close()
 
 #figure out where the nth photo is (or at least should be)
-def FileName(fileNumber):
+def get_file_name(file_number):
     global attrs
-    if (fileNumber == 0):
+    if (file_number == 0):
         return "../../images/placeholder.jpg"
-    return "../../images/" + attrs["file_name_prefix"] + str(fileNumber) + ".jpg"
+    return "../../images/" + attrs["file_name_prefix"] + str(file_number) + ".jpg"
 
 # Initialization ****************************************************************************************
 
-getDataAttributes()
-hasGUI = True
+get_attributes()
+has_GUI = True
 try:
 	import cv2
 except ImportError:
@@ -59,7 +59,7 @@ try:
 	from gi.repository import GLib, Gtk
 	from gi.events import GLibEventLoopPolicy
 except Exception:
-	hasGUI = False
+	has_GUI = False
 from datetime import datetime, timedelta, timezone
 from astral import sun, Observer
 import signal
@@ -105,13 +105,13 @@ signal.signal(signal.SIGINT,do_shutdown)#I have no idea why these aren't the sam
 
 # CLI commands   ***********************************************************************************
 
-#a simple command to allow the user to change settings-this lets them define nonsense parameters, but I could care less, because my getdataattributes can ignore them.
+#a simple command to allow the user to change settings-this lets them define nonsense parameters, but I could care less, because my get_attributes can ignore them.
 #However, this almost certainly breaks if you pass in a thing that contains a newline, which we should fix later.
 @app.command()
 def change_setting(key : str, value : str):
 	global attrs
 	attrs[key] = value
-	setAttributes()
+	set_attributes()
 
 #control pumps using hysteresis based on the values returned from the MCP
 @app.command()
@@ -124,11 +124,11 @@ def water():
 			if (attrs["bed" + str(x)] == "False") and (moisture < int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter" + str(x)]) - (float(attrs["deadband" + str(x)])/2))):#this if-else is basically an inelegant hysteresis controller. On the other hand, we're being rewarded for not destroying the pump, not for elegantly destroying the pump.
 				GPIO.output(int(attrs["waterPin" + str(x)]), GPIO.HIGH)
 				attrs["bed" + str(x)] = "True"
-				setAttributes()
+				set_attributes()
 			elif (attrs["bed" + str(x)] == "True") and (moisture > int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter" + str(x)]) + (float(attrs["deadband" + str(x)])/2))):
 				GPIO.output(int(attrs["waterPin" + str(x)]), GPIO.LOW)
 				attrs["bed" + str(x)] = "False"
-				setAttributes()
+				set_attributes()
 			if (attrs["bed" + str(x)] == "True"):
 				run_pump = True#If any bed is on, then run the pump.
 		if run_pump:
@@ -182,18 +182,18 @@ def camera_capture():#updated to not badly reimplement last_file_name
 		else:
 			print("Warning: Image capture failed to complete.")
 	else:
-		cv2.imwrite(FileName(int(attrs["last_file_number"]) + 1),frame)
+		cv2.imwrite(get_file_name(int(attrs["last_file_number"]) + 1),frame)
 		attrs["last_file_number"] = str(int(attrs["last_file_number"]) + 1)
-		setAttributes()
+		set_attributes()
 
 @app.command()
 def create_video(output_video_path : str, fps : int = 24, size : str = None):
 	image_paths = []
 	for num in range(1,int(attrs["last_file_number"])+1):
-		if cv2.imread(FileName(num)) is not None:
-			image_paths.append(FileName(num))
+		if cv2.imread(get_file_name(num)) is not None:
+			image_paths.append(get_file_name(num))
 		else:
-			print("Warning: could not read " + FileName(num) + ", skipping.")
+			print("Warning: could not read " + get_file_name(num) + ", skipping.")
 	if not image_paths:
 		raise ValueError("Umm, we need images to make a video.")
 	first_frame = cv2.imread(image_paths[0])
@@ -227,12 +227,12 @@ def start_gui():
 
 class GUI:
 	def __init__(self):
-		global hasGUI
-		assert hasGUI#thou shalt not start the GUI without a GUI. See lines 54-60 for more info.
+		global has_GUI
+		assert has_GUI#thou shalt not start the GUI without a GUI. See lines 54-60 for more info.
 		self.lock = asyncio.Lock()
-		self.Policy = GLibEventLoopPolicy()
-		asyncio.set_event_loop_policy(self.Policy)
-		self.loop = self.Policy.get_event_loop()
+		self.policy = GLibEventLoopPolicy()
+		asyncio.set_event_loop_policy(self.policy)
+		self.loop = self.policy.get_event_loop()
 		self.tasks = []
 		self.App = Gtk.Application(application_id="com.github.sp29174.GreenhousePython")
 		if attrs["is_debug"]=="True":
@@ -250,7 +250,7 @@ class GUI:
 		self.window.set_child(self.notebook)
 		#stuff goes here
 		self.CameraPage = Gtk.CenterBox()
-		self.previewImage = Gtk.Image.new_from_file(FileName(int(attrs["last_file_number"])))
+		self.previewImage = Gtk.Image.new_from_file(get_file_name(int(attrs["last_file_number"])))
 		self.CameraPage.set_start_widget(self.previewImage)
 		self.cameraText = Gtk.Label(label="This text should vanish in a poof of smoke.")
 		self.CameraPage.set_center_widget(self.cameraText)
@@ -328,7 +328,7 @@ class GUI:
 		global attrs
 		await self.lock.acquire()
 		attrs["recording_status"] = str(whermst)
-		setAttributes()
+		set_attributes()
 		self.lock.release()
 	async def doForcedCapture(self):
 		global attrs
@@ -340,19 +340,19 @@ class GUI:
 		global attrs
 		await self.lock.acquire()
 		attrs["control_parameter" + str(n)] = str(value)
-		setAttributes()
+		set_attributes()
 		self.lock.release()
 	async def doUpdateDeadband(self,n,value):
 		global attrs
 		await self.lock.acquire()
 		attrs["deadband" + str(n)] = str(value)
-		setAttributes()
+		set_attributes()
 		self.lock.release()
 	async def doUpdateLights(self,n,value):
 		global attrs
 		await self.lock.acquire()
 		attrs["light_length" + str(n)] = str(value)
-		setAttributes()
+		set_attributes()
 		self.lock.release()
 	async def doUpdateSettings(self):
 		global attrs
@@ -392,7 +392,7 @@ class GUI:
 			self.lock.release()
 			return None
 		attrs[thingToChange] = self.SettingsTextBox.get_text()
-		setAttributes()
+		set_attributes()
 		self.lock.release()
 	async def autocontrol(self):
 		global attrs
@@ -418,13 +418,14 @@ class GUI:
 				self.waterpages[n].get_start_widget().set_label("Bed " + str(n) + " is running.")
 			else:
 				self.waterpages[n].get_start_widget().set_label("Bed " + str(n) + " is not running.")
-		self.previewImage.set_from_file(FileName(int(attrs["last_file_number"])))
+		self.previewImage.set_from_file(get_file_name(int(attrs["last_file_number"])))
 		self.cameraText.set_label("Overall, " + attrs["last_file_number"] + " images have been captured by this device.\nCurrently, images will be captured every " + attrs["last_file_number"] + " seconds.")
 		return None
 
 # Finalization and execution ****************************************************************************************
 if __name__ == "__main__":
 	app()
+
 
 
 
