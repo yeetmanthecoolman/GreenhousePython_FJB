@@ -14,7 +14,7 @@ waterPin1:17
 waterPin2:18
 MAX_VALUE:65536
 is_debug:True
-recording_status:not dead
+recording_status:True
 beds:3
 bed0:False
 bed1:False
