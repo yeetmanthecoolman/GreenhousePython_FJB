@@ -1,11 +1,13 @@
-import gpiod
+from gpiod import chip as ch
 
 class GPIO:
-	BCM = None
-	OUT = None
-	HIGH = None
-	LOW = None
-	def setmode():
+	def __init__(self):
+		self.BCM = None
+		self.OUT = None
+		self.HIGH = None
+		self.LOW = None
+		self.chip = ch.Chip("/dev/gpiochip0")
+	def setmode(self, ):
 		pass
 	def setup():
 		pass
