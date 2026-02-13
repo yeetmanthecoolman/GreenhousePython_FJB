@@ -199,7 +199,10 @@ def light():#This code is a disaster area. Essentially, here's the logic:
 				print("The light should be on.")
 		elif attrs["is_debug"] == "True":
 			print("The light should be off.")
-		GPIO.output(int(attrs["light_pin" + str(n)]), light_on)
+		if light_on:
+			GPIO.output(int(attrs["light_pin" + str(n)]), GPIO.HIGH)
+		else:
+			GPIO.output(int(attrs["light_pin" + str(n)]), GPIO.LOW)
 
 #A command that captures a photograph, writes it to a file, and updates attrs accordingly.
 @app.command(help="Manually capture a photograph.")
@@ -468,6 +471,7 @@ if attrs["is_debug"] == "True":
 	print(__name__)
 if __name__ == "__main__":
 	app()
+
 
 
 
