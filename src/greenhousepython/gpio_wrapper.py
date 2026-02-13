@@ -11,12 +11,12 @@ class gpio:
 		self.HIGH = v.ACTIVE
 		self.LOW = v.INACTIVE
 		self.chip = c(path)
-		self.lines = self.chip.request_lines(settings)#Gimme all them lines
+		self.lines = {}
 	def setmode(self, *args):
 		pass
 	def setup(self,number,type):
-		pass
+		self.lines[number] = self.chip.request_lines({number : None})#Gimme all them lines
 	def cleanup(self):
 		self.chip.close()
 	def output(self,number,value):
-		self.lines.set_value(name,value)
+		self.lines[number].set_value(number,value)
