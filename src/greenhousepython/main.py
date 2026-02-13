@@ -49,7 +49,9 @@ try:
 	import RPi.GPIO as GPIO
 	import mcp3008 as MCP
 	from mcp3008 import MCP3008
-except ImportError:
+except ImportError as e:
+	if attrs["is_debug"] == "True":
+		print("WARNING: " + str(e))
 	from greenhousepython.nonsense import GPIO, MCP, MCP3008
 import sys
 import asyncio
@@ -58,7 +60,9 @@ try:
 	gi.require_version("Gtk", "4.0")
 	from gi.repository import GLib, Gtk
 	from gi.events import GLibEventLoopPolicy
-except Exception:
+except Exception as e:
+	if attrs["is_debug"] == "True":
+		print("WARNING: " + str(e))
 	has_GUI = False
 from datetime import datetime, timedelta, timezone
 from astral import sun, Observer
@@ -90,16 +94,25 @@ def do_shutdown(*args,**kwargs):
 		print("Shutting down...")
 	try:#we shouldn't let crashes prevent the program from closing, so these must all be wrapped with try.
 		mcp.close()#close down water control coms
-	except Exception:
-		print("Warning: we couldn't close down the water control communitcations.")
+	except Exception as e:
+		if attrs["is_debug"] == "True":
+			print("WARNING: " + str(e))
+		else:
+			print("Warning: we couldn't close down the water control communitcations.")
 	try:
 		the_camera.release()#turn off the damn camera
-	except Exception:
-		print("Warning: we couldn't close down the camera.")
+	except Exception as e:
+		if attrs["is_debug"] == "True":
+			print("WARNING: " + str(e))
+		else:
+			print("Warning: we couldn't close down the camera.")
 	try:
 		GPIO.cleanup()#knock the GPIO back to high-zed
-	except Exception:
-		print("Warning: we couldn't reset the GPIO.")
+	except Exception as e:
+		if attrs["is_debug"] == "True":
+			print("WARNING: " + str(e))
+		else:
+			print("Warning: we couldn't reset the GPIO.")
 	sys.exit(0)#ensure the proghramme actually ends
 
 # Postpostinitialization ***********************************************************************************
@@ -139,8 +152,11 @@ def water():
 			GPIO.output(int(attrs["pump_pin"]), GPIO.HIGH)
 		else:
 			GPIO.output(int(attrs["pump_pin"]), GPIO.LOW)
-	except Exception:
-		print("We failed at water control. This is probably because we aren't connected to an MCP3008, which is reasonable. If it isn't reasonable, check the dependencies.")
+	except Exception as e:
+		if attrs["is_debug"] == "True":
+			print("WARNING: " + str(e))
+		else:
+			print("We failed at water control. This is probably because we aren't connected to an MCP3008, which is reasonable. If it isn't reasonable, check the dependencies.")
 
 @app.command(help="Force the system to run the automatic light control logic without starting the GUI. [bold red]This will not work if the sun will not rise and set today.[/bold red]")
 def light():#This code is a disaster area. Essentially, here's the logic:
@@ -437,22 +453,7 @@ class GUI:
 		return None
 
 # Finalization and execution ****************************************************************************************
+if attrs["is_debug"] == "True":
+	print(__name__)
 if __name__ == "__main__":
 	app()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
