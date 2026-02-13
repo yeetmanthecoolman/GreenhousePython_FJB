@@ -53,13 +53,13 @@ except ImportError as e:
 		print("WARNING: " + str(e))
 	from greenhousepython.nonsense import MCP, MCP3008
 try:
-	import RPi.GPIO as GPIO
-except ImportError as e:
+	from greenhousepython.gpio_wrapper import gpio as g
+	GPIO = g()
+except Exception as e:
 	if attrs["is_debug"] == "True":
 		print("WARNING: " + str(e))
 	try:
-		from greenhousepython.gpio_wrapper import gpio as g
-		GPIO = g()
+		import RPi.GPIO as GPIO
 	except ImportError as e:
 		if attrs["is_debug"] == "True":
 			print("WARNING: " + str(e))
@@ -468,5 +468,6 @@ if attrs["is_debug"] == "True":
 	print(__name__)
 if __name__ == "__main__":
 	app()
+
 
 
