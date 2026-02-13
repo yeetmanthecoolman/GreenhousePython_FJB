@@ -46,13 +46,23 @@ try:
 except ImportError:
 	from greenhousepython.nonsense import cv2
 try:
-	import RPi.GPIO as GPIO
 	import mcp3008 as MCP
 	from mcp3008 import MCP3008
 except ImportError as e:
 	if attrs["is_debug"] == "True":
 		print("WARNING: " + str(e))
-	from greenhousepython.nonsense import GPIO, MCP, MCP3008
+	from greenhousepython.nonsense import MCP, MCP3008
+try:
+	import RPi.GPIO as GPIO
+except ImportError as e:
+	if attrs["is_debug"] == "True":
+		print("WARNING: " + str(e))
+	try:
+		from greenhousepython.gpio_wrapper import GPIO
+	except ImportError as e:
+		if attrs["is_debug"] == "True":
+			print("WARNING: " + str(e))
+		from greenhousepthon.nonsense import GPIO
 import sys
 import asyncio
 try:
@@ -457,3 +467,4 @@ if attrs["is_debug"] == "True":
 	print(__name__)
 if __name__ == "__main__":
 	app()
+
