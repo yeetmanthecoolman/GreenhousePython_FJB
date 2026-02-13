@@ -251,6 +251,7 @@ class GUI:
 		self.gui_app.run(None)
 		if attrs["is_debug"]=="True":
 			print("we get to the bloody twilight zone")
+		do_shutdown()
 	def do_activate(self,useless):
 		global attrs
 		self.window = Gtk.ApplicationWindow(application=self.gui_app)
@@ -438,6 +439,7 @@ class GUI:
 # Finalization and execution ****************************************************************************************
 if __name__ == "__main__":
 	app()
+
 
 
 
