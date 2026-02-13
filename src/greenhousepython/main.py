@@ -85,6 +85,9 @@ the_camera = cv2.VideoCapture(0)
 def do_shutdown(*args,**kwargs):
 	global mcp
 	global the_camera
+	global attrs
+	if attrs["is_debug"] == "True":
+		print("Shutting down...")
 	try:#we shouldn't let crashes prevent the program from closing, so these must all be wrapped with try.
 		mcp.close()#close down water control coms
 	except Exception:
@@ -435,6 +438,7 @@ class GUI:
 # Finalization and execution ****************************************************************************************
 if __name__ == "__main__":
 	app()
+
 
 
 
