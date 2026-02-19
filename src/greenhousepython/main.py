@@ -63,7 +63,7 @@ except Exception as e:
 	except ImportError as e:
 		if attrs["is_debug"] == "True":
 			print("WARNING: " + str(e))
-		from greenhousepthon.nonsense import GPIO
+		from greenhousepython.nonsense import GPIO
 import sys
 import asyncio
 try:
@@ -471,6 +471,7 @@ if attrs["is_debug"] == "True":
 	print(__name__)
 if __name__ == "__main__":
 	app()
+
 
 
 
