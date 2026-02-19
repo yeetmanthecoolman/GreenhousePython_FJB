@@ -183,8 +183,13 @@ def light():#This code is a disaster area. Essentially, here's the logic:
 	global attrs
 	global times_off
 	observer = Observer(float(attrs["latitude"]),float(attrs["longitude"]),float(attrs["elevation"]))
-	the_sun = sun.daylight(observer)#The sun is a deadly laser
-	if (datetime.now(timezone.utc) > the_sun[1]):
+	try:
+		the_sun = sun.daylight(observer)#The sun is a deadly laser	
+	except ValueError as e:#the sun doesn't rise/set today. We therefore need to fudge the sun. This means that, for our purposes, the sun rose at midnight and set a very long time ago.
+		if attrs["is_debug"] == True:
+			print(str(e))
+		the_sun = [datetime(datetime.year,datetime.month,datetime.day),datetime.min]
+	if (datetime.now(timezone.utc) >= the_sun[1]):
 		if attrs["is_debug"] == "True":
 			print("We think that it's after sunset.")
 		for n in range(int(attrs["lights"])):
@@ -471,6 +476,7 @@ if attrs["is_debug"] == "True":
 	print(__name__)
 if __name__ == "__main__":
 	app()
+
 
 
 
