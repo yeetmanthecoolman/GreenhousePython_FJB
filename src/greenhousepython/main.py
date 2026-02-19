@@ -148,12 +148,12 @@ def water():
 	run_pump = False
 	try:#my crummy mock of mcp3008.MCP3008 can't make sense of line 118, so this eyesore is trapped in a try-catch.
 		for x in range(int(attrs["beds"])):
-			moisture = mcp()[x]
-			if (attrs["bed" + str(x)] == "False") and (moisture < int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter" + str(x)]) - (float(attrs["deadband" + str(x)])/2))):#this if-else is basically an inelegant hysteresis controller. On the other hand, we're being rewarded for not destroying the pump, not for elegantly destroying the pump.
+			moisture = mcp(1)[x]#normalize values to one using mcp3008.MCP3008 (see https://github.com/luxedo/RPi_mcp3008/blob/master/mcp3008.py#L73)
+			if (attrs["bed" + str(x)] == "False") and (moisture < float(attrs["control_parameter" + str(x)]) - (float(attrs["deadband" + str(x)])/2)):#this if-else is basically an inelegant hysteresis controller. On the other hand, we're being rewarded for not destroying the pump, not for elegantly destroying the pump.
 				GPIO.output(int(attrs["water_pin" + str(x)]), GPIO.HIGH)
 				attrs["bed" + str(x)] = "True"
 				set_attributes()
-			elif (attrs["bed" + str(x)] == "True") and (moisture > int(attrs["MAX_VALUE"]) * (float(attrs["control_parameter" + str(x)]) + (float(attrs["deadband" + str(x)])/2))):
+			elif (attrs["bed" + str(x)] == "True") and (moisture > float(attrs["control_parameter" + str(x)]) + (float(attrs["deadband" + str(x)])/2)):
 				GPIO.output(int(attrs["water_pin" + str(x)]), GPIO.LOW)
 				attrs["bed" + str(x)] = "False"
 				set_attributes()
@@ -415,7 +415,7 @@ class GUI:
 				print("We kinda need these to be floats.")
 				self.lock.release()
 				return None
-		elif ["lights","pump_pin","beds","MAX_VALUE"].count(setting_to_change) != 0 or setting_to_change.startswith("light_pin") or setting_to_change.startswith("water_pin"):
+		elif ["lights","pump_pin","beds"].count(setting_to_change) != 0 or setting_to_change.startswith("light_pin") or setting_to_change.startswith("water_pin"):
 			if ["lights","beds"].count(setting_to_change) != 0:
 				print("When these are changed, the GUI needs to be rearranged, which I haven't coded yet.")
 				assert False
@@ -471,6 +471,7 @@ if attrs["is_debug"] == "True":
 	print(__name__)
 if __name__ == "__main__":
 	app()
+
 
 
 
