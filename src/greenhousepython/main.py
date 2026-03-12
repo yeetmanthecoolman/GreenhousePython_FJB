@@ -11,10 +11,10 @@ attrs = shelve.open("cfg.txt", writeback = True)
 if not attrs:
 	attrs["last_file_number"] = 0
 	attrs["camera_interval"] = 3600
-	attrr["interval"] = 1
+	attrs["interval"] = 1
 	attrs["file_name_prefix"] = "gi"
 	attrs["lights"] = 1
-	attrs["light_length"] = 0.5
+	attrs["light_length0"] = 0.5
 	attrs["latitude"] = 43.0972
 	attrs["longitude"] = -89.5043
 	attrs["elevation"] = 355.0
@@ -52,7 +52,9 @@ def get_file_name(file_number):
 has_GUI = True
 try:
 	import cv2
-	cv2.VideoCapture(0).release()#Fix bug where we crash because there's no camera
+	x = cv2.VideoCapture(0)
+	x.read()
+	x.release()#Fix bug where we crash because there's no camera
 except ImportError:
 	from greenhousepython.nonsense import cv2
 try:
@@ -111,7 +113,7 @@ def do_shutdown(*args,**kwargs):
 	global mcp
 	global the_camera
 	global attrs
-	if attrs["is_debug"] == "True":
+	if attrs["is_debug"]:
 		print("Shutting down...")
 	try:#we shouldn't let crashes prevent the program from closing, so these must all be wrapped with try.
 		mcp.close()#close down water control coms
@@ -144,12 +146,38 @@ signal.signal(signal.SIGINT,do_shutdown)#I have no idea why these aren't the sam
 
 # CLI commands   ***********************************************************************************
 
-#a simple command to allow the user to change settings-this lets them define nonsense parameters, but I could care less, because my get_attributes can ignore them.
-#However, this almost certainly breaks if you pass in a thing that contains a newline, which we should fix later.
-@app.command(help="Change the setting KEY to VALUE. Newlines and colons are not supported for technical reasons. BROKEN while we switch to Shelves.")
+@app.command(help="Change the setting KEY to VALUE.")
 def change_setting(key : Annotated[str, Argument(help="The exact name of the setting to change or create.")], value : Annotated[str, Argument(help="The exact value that the setting should be changed to.")]):
-	global attrs
-	attrs[key] = value
+	if ["file_name_prefix"].count(key) != 0:
+		print("This part needs logic for automatically renaming files, which I haven't written yet. Sorry!")
+		assert False
+	elif ["interval","camera_inteval","longitude","latitude","elevation"].count(key) != 0 or key.startswith("control_parameter") or key.startswith("deadband"):
+		try:
+			new_val = float(value)
+		except ValueError:
+			print("We kinda need these to be floats.")
+			return None
+	elif ["lights","pump_pin","beds","last_file_number"].count(key) != 0 or key.startswith("light_pin") or key.startswith("water_pin"):
+		if ["lights","beds"].count(setting_to_change) != 0:
+			print("When these are changed, the GUI needs to be rearranged, which I haven't coded yet.")
+			assert False
+		try:
+			new_val = int(value)
+		except ValueError:
+			print("We kinda need these to be ints.")
+			return None
+	elif ["is_debug","is_recording"].count(key) != 0 or key.startswith("bed"):#this only doesn't catch beds because we already found it on line 160
+		if "True" == value:
+			new_val = True
+		elif "False" == value:
+			new_val = False
+		else:
+			print("We kinda need these to be bools.")
+			return None
+	else:
+		print("Confusion noise: '" + key + "' is not actually a thing.")
+		return None
+	attrs[setting_to_change] = new_val
 	attrs.sync()
 
 #control pumps using hysteresis based on the values returned from the MCP
@@ -189,7 +217,7 @@ def light():#This code is a disaster area. Essentially, here's the logic:
 	#The problem comes when it's after midnight and we need to figure out when to turn the lights off: if we use the sunset time on the current day, we will never turn the lights off. Bad.
 	#The solution I found is to calculate the time in UTC when we need to turn off the lights, do said calculation before midnight when the API is still talking about the correct sunset, and then just intentionally let this number get stale it's night and before midnight, at which point we will be talking about the right sunset again.
 	#A consequence of this is that if you adjust the light length at any reasonable hour, it will only update the next day.
-	#Another consequence of this is that if you run this code in Iceland or something where the sun won't rise on certain days of the year, this code will catch fire.
+	#Another consequence of this is that if you run this code in Iceland or something where the sun won't rise on certain days of the year, this code will have to bodge the sun.
 	#There must be a better solution than this, but I couldn't find it. Shrug emoji.
 	global attrs
 	global times_off
@@ -232,7 +260,7 @@ def camera_capture():#updated to not badly reimplement last_file_name
 		else:
 			print("Warning: Image capture failed to complete.")
 	else:
-		cv2.imwrite(get_file_name(attrs["last_file_number"] + 1, frame)
+		cv2.imwrite(get_file_name(attrs["last_file_number"] + 1), frame)
 		attrs["last_file_number"] = attrs["last_file_number"] + 1
 		attrs.sync()
 
@@ -267,9 +295,10 @@ def see_data():
 	global attrs
 	print(times_off)
 	print(mcp())
+	print(mcp(1))
 	keys = attrs.keys()#get all the settings
 	for key in keys:
-		print(key + ":" + attrs[key])#assemble key and values into new format
+		print(key + ":" + str(attrs[key]))#assemble key and values into new format
 
 #A quick little command that just starts the GUI.
 @app.command(help="Starts the GUI. Will fail if your system has no way to render it.")
@@ -388,7 +417,7 @@ class GUI:
 	async def toggle_recording(self,whermst):
 		global attrs
 		await self.lock.acquire()
-		attrs["recording_status"] = whermst
+		attrs["is_recording"] = whermst
 		attrs.sync()
 		self.lock.release()
 	async def force_capture(self):
@@ -416,7 +445,6 @@ class GUI:
 		attrs.sync()
 		self.lock.release()
 	async def update_settings(self):
-		assert False#This is BROKEN until we finish migrating to shelves
 		global attrs
 		await self.lock.acquire()
 		row = self.settings_listbox.get_selected_row()
@@ -424,37 +452,8 @@ class GUI:
 			self.lock.release()
 			return None
 		setting_to_change = row.get_child().get_text()
-		if ["file_name_prefix"].count(setting_to_change) != 0:
-			print("This part needs logic for automatically renaming files, which I haven't written yet. Sorry!")
-			assert False
-		elif ["interval","longitude","latitude","elevation"].count(setting_to_change) != 0:
-			try:
-				new_val = str(float(self.settings_text_entry.get_text()))
-			except ValueError:
-				print("We kinda need these to be floats.")
-				self.lock.release()
-				return None
-		elif ["lights","pump_pin","beds"].count(setting_to_change) != 0 or setting_to_change.startswith("light_pin") or setting_to_change.startswith("water_pin"):
-			if ["lights","beds"].count(setting_to_change) != 0:
-				print("When these are changed, the GUI needs to be rearranged, which I haven't coded yet.")
-				assert False
-			try:
-				new_val = str(int(self.settings_text_entry.get_text()))
-			except ValueError:
-				print("We kinda need these to be ints.")
-				self.lock.release()
-				return None
-		elif ["is_debug"].count(setting_to_change) != 0:
-			if ["True","False"].count(self.settings_text_entry.get_text()) == 0:
-				print("We kinda need these to be bools.")
-				self.lock.release()
-				return None
-		elif ["last_file_number"].count(setting_to_change) != 0 or setting_to_change.startswith("bed") or setting_to_change.startswith("control_parameter") or setting_to_change.startswith("deadband"):#this only doesn't catch beds because we already found it on line 356
-			print("Changing this randomly will definitley break the software. If you know what you're doing, use the CLI, which is less picky")
-			self.lock.release()
-			return None
-		attrs[setting_to_change] = self.settings_text_entry.get_text()
-		set_attributes()
+		initial_val = self.settings_text_entry.get_text()
+		change_setting(setting_to_change,initial_val)
 		self.lock.release()
 	async def automatic_control(self):
 		global attrs
@@ -469,7 +468,7 @@ class GUI:
 		global attrs
 		while True:
 			await self.lock.acquire()
-			if attrs["recording_status"]:
+			if attrs["is_recording"]:
 				camera_capture()
 			await self.update_GUI()
 			self.lock.release()
@@ -482,12 +481,11 @@ class GUI:
 			else:
 				self.water_pages[n].get_start_widget().set_label("Bed " + str(n) + " is not running.")
 		self.preview_image.set_from_file(get_file_name(attrs["last_file_number"]))
-		self.camera_text.set_label("Overall, " + attrs["last_file_number"] + " images have been captured by this device.\nCurrently, images will be captured every " + attrs["last_file_number"] + " seconds.")
+		self.camera_text.set_label("Overall, " + str(attrs["last_file_number"]) + " images have been captured by this device.\nCurrently, images will be captured every " + str(attrs["last_file_number"]) + " seconds.")
 		return None
 
 # Finalization and execution ****************************************************************************************
-if attrs["is_debug"] == "True":
+if attrs["is_debug"]:
 	print(__name__)
 if __name__ == "__main__":
 	app()
-
