@@ -50,7 +50,7 @@ This project integrates sensors, relays, a GUI, and camera control to create a f
 		cd ~/GreenhousePython && poetry build -f wheel
 	
 	💡When you want to run the script again, you can run:
-		cd ~/ && sudo apt full-upgrade && cd ./GreenhousePython && poetry update -vvv && cd ./src/greenhousepython && poetry run -vvv python -vvi ./main.py start-gui
+		cd ~/ && sudo apt update && sudo apt full-upgrade && cd ./GreenhousePython && poetry update -vvv && cd ./src/greenhousepython && poetry run -vvv python -vvi ./main.py start-gui
 			
 	💡To uninstall the greenhouse project, we will need to make an uninstall command. We have not gotten it working yet.
 
